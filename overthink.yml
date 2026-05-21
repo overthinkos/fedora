@@ -1,0 +1,50 @@
+#  overthinkos/fedora — the Fedora image-family showcase, split out of the main
+#  overthink repo (2026-05). Mounted as a git submodule at image/fedora.
+#
+#  This repo VENDORS NOTHING. It composes the canonical ov layers, the shared
+#  build-config (distro/builder/init), and the Fedora base stack entirely by
+#  GITHUB REFERENCE into github.com/overthinkos/overthink — every layer in
+#  image.yml is an `@github.com/...` ref, and build.yml + fedora-base.yml are
+#  remote includes. There is no duplicated config.
+#
+#  Unlike debian/ubuntu (whose bases moved entirely) and like arch, the Fedora
+#  base STAYS in the main repo: fedora is the ecosystem default base (~40 main
+#  images root on fedora/fedora-nonfree, and fedora-builder is main's
+#  defaults.builder), so the base stack (fedora + fedora-builder + fedora-nonfree)
+#  lives in the main repo's fedora-base.yml and is remote-included here. Only the
+#  Fedora consumer showcase images (fedora-coder / fedora-ov / fedora-test) live
+#  in this repo. Nothing in main consumes any image here, so there is NO
+#  main → fedora coupling — the only edge is fedora → main.
+#
+#  Directly buildable: `ov image build fedora-coder` (the build verb defaults to
+#  this overthink.yml). From the parent repo: `ov -C image/fedora image build
+#  fedora-coder`, or anywhere: `ov --repo overthinkos/fedora image build
+#  fedora-coder`.
+#
+#  Tag note: layer refs + build.yml pin to the ecosystem layer tag
+#  (v2026.141.1600); the fedora-base.yml FILE include pins to the fresh main tag
+#  that first carries fedora-base.yml (it does not exist at v2026.141.1600) —
+#  exactly as main includes cachyos-base.yml at its own tag while layers stay at
+#  v2026.141.1600.
+version: 2026.141.1600
+defaults:
+    platform:
+        - linux/amd64
+    tag: auto
+    registry: ghcr.io/overthinkos
+    build:
+        - rpm
+    merge:
+        auto: false
+        max_mb: 128
+include:
+    # Local per-kind entries (Fedora showcase images).
+    - image.yml
+    # Shared build-config — pulled from the main repo by github reference
+    # (single source of truth, pinned to the ecosystem layer tag). Carries
+    # distro.fedora + the rpm format template.
+    - '@github.com/overthinkos/overthink/build.yml:v2026.141.1600'
+    # Fedora base stack (fedora + fedora-builder + fedora-nonfree) — owned by
+    # the main repo (the ecosystem default base). Pinned to the fresh main tag
+    # that first carries fedora-base.yml.
+    - '@github.com/overthinkos/overthink/fedora-base.yml:v2026.141.2308'
