@@ -124,7 +124,6 @@ image:
               scope: deploy
               reachable: true
     fedora-ov:
-        enabled: false
         base: ov.fedora
         # Builder maps do NOT cross the `ov` namespace boundary; route the
         # standard build formats to main's fedora-builder under the `ov`
@@ -142,7 +141,6 @@ image:
             - '@github.com/overthinkos/overthink/layers/container-nesting:v2026.141.1600'
             - '@github.com/overthinkos/overthink/layers/nvidia:v2026.141.1600'
     fedora-test:
-        enabled: false
         base: ov.fedora
         # Builder maps do NOT cross the `ov` namespace boundary; testapi carries
         # a pixi.toml, so route pixi (plus the standard npm/cargo) to main's
