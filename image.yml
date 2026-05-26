@@ -1,0 +1,113 @@
+#  Per-kind file for image entries. Sibling of overthink.yml — included via
+#  overthink.yml's `includes:` list. The schema kind discriminator is
+#  `kind: image` for kind-keyed entries; root-shape map is `image:` (this file).
+#  2026-05 kind-files cutover.
+version: 2026.144.1443
+image:
+    fedora-coder:
+        base: ov.fedora-nonfree
+        # Builder maps do NOT cross the `ov` namespace boundary; route the
+        # formats this image builds (pixi via pixi/uv, npm via nodejs, cargo
+        # via rust) to main's fedora-builder under the `ov` namespace.
+        builder:
+            pixi: ov.fedora-builder
+            npm: ov.fedora-builder
+            cargo: ov.fedora-builder
+        layer:
+            - '@github.com/overthinkos/overthink/layers/agent-forwarding:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/sshd:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/ov-full:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/ov-mcp:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/container-nesting:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/dbus:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/tmux:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/language-runtimes:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/golang:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/nodejs:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/rust:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/pixi:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/uv:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/build-toolchain:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/dev-tools:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/pre-commit:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/direnv:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/gh:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/typst:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/asciinema:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/claude-code:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/codex:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/gemini:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/forgecode:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/oracle:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/devops-tools:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/kubernetes:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/docker-ce:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/github-actions:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/google-cloud:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/google-cloud-npm:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/grafana-tools:v2026.146.0858'
+        port:
+            - 2222:2222
+            - 18765:18765
+        eval:
+            - command: test -x ${HOME}/.npm-global/bin/claude && test -x ${HOME}/.npm-global/bin/codex && test -x ${HOME}/.npm-global/bin/gemini && test -x ${HOME}/.npm-global/bin/forge
+              id: fedora-coder-ai-clis
+              exit_status: 0
+            - command: test -x /usr/bin/go && test -x /usr/bin/node && { test -x ${HOME}/.cargo/bin/cargo || test -x /usr/bin/cargo; }
+              id: fedora-coder-languages
+              exit_status: 0
+            - command: test -x /usr/bin/kubectl && test -x /usr/bin/docker && test -x /usr/local/bin/aws && test -x /usr/bin/gcloud && test -x /usr/local/bin/tofu
+              id: fedora-coder-devops
+              exit_status: 0
+            - command: test -x /usr/local/bin/ov
+              id: fedora-coder-ov
+              exit_status: 0
+            - addr: 127.0.0.1:${HOST_PORT:2222}
+              id: fedora-coder-sshd-port
+              timeout: 5s
+              scope: deploy
+              reachable: true
+            - command: ov version
+              id: fedora-coder-ov-version
+              scope: deploy
+              in_container: true
+              exit_status: 0
+            - addr: 127.0.0.1:${HOST_PORT:18765}
+              id: fedora-coder-mcp-port
+              timeout: 5s
+              scope: deploy
+              reachable: true
+    fedora-ov:
+        base: ov.fedora
+        # Builder maps do NOT cross the `ov` namespace boundary; route the
+        # standard build formats to main's fedora-builder under the `ov`
+        # namespace so any pixi/npm/cargo layer added here resolves.
+        builder:
+            pixi: ov.fedora-builder
+            npm: ov.fedora-builder
+            cargo: ov.fedora-builder
+        layer:
+            - '@github.com/overthinkos/overthink/layers/agent-forwarding:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/supervisord:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/ov-full:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/golang:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/gh:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/sshd:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/container-nesting:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/nvidia:v2026.146.0858'
+    fedora-test:
+        base: ov.fedora
+        # Builder maps do NOT cross the `ov` namespace boundary; testapi carries
+        # a pixi.toml, so route pixi (plus the standard npm/cargo) to main's
+        # fedora-builder under the `ov` namespace.
+        builder:
+            pixi: ov.fedora-builder
+            npm: ov.fedora-builder
+            cargo: ov.fedora-builder
+        layer:
+            - '@github.com/overthinkos/overthink/layers/agent-forwarding:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/traefik:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/layers/testapi:v2026.146.0858'
+        port:
+            - 8000:8000
+            - 8080:8080
