@@ -65,9 +65,7 @@ eval:
         image: fedora-coder
         disposable: true
         lifecycle: dev
-        port:
-            - 42222:2222
-            - 48765:18765
+        port: [auto]   # auto-allocate free host ports (avoid fixed-port collisions)
         description:
             feature: R10 bed for the fedora-coder image — sshd + ov-mcp + 5 AI CLIs + DevOps tooling on the Fedora 43 + RPM Fusion base
             tag: [testing]
@@ -76,8 +74,7 @@ eval:
         image: fedora-ov
         disposable: true
         lifecycle: dev
-        port:
-            - 42223:2222
+        port: [auto]   # auto-allocate free host ports (avoid fixed-port collisions)
         description:
             feature: R10 bed for the fedora-ov image — minimal ov toolchain + sshd + nvidia on the Fedora base
             tag: [testing]
@@ -86,9 +83,7 @@ eval:
         image: fedora-test
         disposable: true
         lifecycle: dev
-        port:
-            - 48000:8000
-            - 48080:8080
+        port: [auto]   # auto-allocate free host ports (avoid fixed-port collisions)
         description:
             feature: R10 bed for the fedora-test image — traefik + testapi on the Fedora base
             tag: [testing]
