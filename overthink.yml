@@ -30,7 +30,7 @@
 #  this overthink.yml). From the parent repo: `ov -C image/fedora image build
 #  fedora-coder`, or anywhere: `ov --repo overthinkos/fedora image build
 #  fedora-coder`.
-version: 2026.144.1443
+version: 2026.155.1801
 defaults:
     platform:
         - linux/amd64
