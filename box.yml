@@ -1,0 +1,113 @@
+#  Per-kind file for image entries. Sibling of overthink.yml — included via
+#  overthink.yml's `includes:` list. The schema kind discriminator is
+#  `kind: image` for kind-keyed entries; root-shape map is `image:` (this file).
+#  2026-05 kind-files cutover.
+version: 2026.156.557
+box:
+    fedora-coder:
+        base: ov.fedora-nonfree
+        # Builder maps do NOT cross the `ov` namespace boundary; route the
+        # formats this image builds (pixi via pixi/uv, npm via nodejs, cargo
+        # via rust) to main's fedora-builder under the `ov` namespace.
+        builder:
+            pixi: ov.fedora-builder
+            npm: ov.fedora-builder
+            cargo: ov.fedora-builder
+        candy:
+            - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/sshd:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/ov-full:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/ov-mcp:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/container-nesting:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/dbus:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/tmux:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/language-runtimes:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/golang:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/nodejs:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/rust:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/pixi:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/uv:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/build-toolchain:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/dev-tools:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/pre-commit:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/direnv:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/gh:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/typst:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/asciinema:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/claude-code:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/codex:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/gemini:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/forgecode:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/oracle:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/devops-tools:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/kubernetes:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/docker-ce:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/github-actions:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/google-cloud:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/google-cloud-npm:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/grafana-tools:v2026.146.0858'
+        port:
+            - 2222:2222
+            - 18765:18765
+        eval:
+            - command: test -x ${HOME}/.npm-global/bin/claude && test -x ${HOME}/.npm-global/bin/codex && test -x ${HOME}/.npm-global/bin/gemini && test -x ${HOME}/.npm-global/bin/forge
+              id: fedora-coder-ai-clis
+              exit_status: 0
+            - command: test -x /usr/bin/go && test -x /usr/bin/node && { test -x ${HOME}/.cargo/bin/cargo || test -x /usr/bin/cargo; }
+              id: fedora-coder-languages
+              exit_status: 0
+            - command: test -x /usr/bin/kubectl && test -x /usr/bin/docker && test -x /usr/local/bin/aws && test -x /usr/bin/gcloud && test -x /usr/local/bin/tofu
+              id: fedora-coder-devops
+              exit_status: 0
+            - command: test -x /usr/local/bin/ov
+              id: fedora-coder-ov
+              exit_status: 0
+            - addr: 127.0.0.1:${HOST_PORT:2222}
+              id: fedora-coder-sshd-port
+              timeout: 5s
+              scope: deploy
+              reachable: true
+            - command: ov version
+              id: fedora-coder-ov-version
+              scope: deploy
+              in_container: true
+              exit_status: 0
+            - addr: 127.0.0.1:${HOST_PORT:18765}
+              id: fedora-coder-mcp-port
+              timeout: 5s
+              scope: deploy
+              reachable: true
+    fedora-ov:
+        base: ov.fedora
+        # Builder maps do NOT cross the `ov` namespace boundary; route the
+        # standard build formats to main's fedora-builder under the `ov`
+        # namespace so any pixi/npm/cargo layer added here resolves.
+        builder:
+            pixi: ov.fedora-builder
+            npm: ov.fedora-builder
+            cargo: ov.fedora-builder
+        candy:
+            - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/supervisord:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/ov-full:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/golang:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/gh:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/sshd:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/container-nesting:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/nvidia:v2026.146.0858'
+    fedora-test:
+        base: ov.fedora
+        # Builder maps do NOT cross the `ov` namespace boundary; testapi carries
+        # a pixi.toml, so route pixi (plus the standard npm/cargo) to main's
+        # fedora-builder under the `ov` namespace.
+        builder:
+            pixi: ov.fedora-builder
+            npm: ov.fedora-builder
+            cargo: ov.fedora-builder
+        candy:
+            - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/traefik:v2026.146.0858'
+            - '@github.com/overthinkos/overthink/candy/testapi:v2026.146.0858'
+        port:
+            - 8000:8000
+            - 8080:8080

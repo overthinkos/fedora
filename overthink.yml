@@ -30,7 +30,7 @@
 #  this overthink.yml). From the parent repo: `ov -C image/fedora image build
 #  fedora-coder`, or anywhere: `ov --repo overthinkos/fedora image build
 #  fedora-coder`.
-version: 2026.155.1801
+version: 2026.156.557
 defaults:
     platform:
         - linux/amd64
@@ -49,7 +49,7 @@ import:
     # ov.fedora-nonfree (consumer bases) + ov.fedora-builder (the builder each
     # consumer image routes pixi/npm/cargo to). Only edge is fedora → main.
     - ov: '@github.com/overthinkos/overthink:v2026.146.0858'
-    - image.yml
+    - box.yml
     - pod.yml
     - k8s.yml
 eval:
@@ -62,28 +62,28 @@ eval:
     # the unattended destroy + rebuild.
     eval-fedora-coder-pod:
         target: pod
-        image: fedora-coder
+        box: fedora-coder
         disposable: true
         lifecycle: dev
-        port: [auto]   # auto-allocate free host ports (avoid fixed-port collisions)
+        port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
         description:
             feature: R10 bed for the fedora-coder image — sshd + ov-mcp + 5 AI CLIs + DevOps tooling on the Fedora 43 + RPM Fusion base
             tag: [testing]
     eval-fedora-ov-pod:
         target: pod
-        image: fedora-ov
+        box: fedora-ov
         disposable: true
         lifecycle: dev
-        port: [auto]   # auto-allocate free host ports (avoid fixed-port collisions)
+        port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
         description:
             feature: R10 bed for the fedora-ov image — minimal ov toolchain + sshd + nvidia on the Fedora base
             tag: [testing]
     eval-fedora-test-pod:
         target: pod
-        image: fedora-test
+        box: fedora-test
         disposable: true
         lifecycle: dev
-        port: [auto]   # auto-allocate free host ports (avoid fixed-port collisions)
+        port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
         description:
             feature: R10 bed for the fedora-test image — traefik + testapi on the Fedora base
             tag: [testing]
