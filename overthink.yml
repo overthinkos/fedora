@@ -30,7 +30,7 @@
 #  this overthink.yml). From the parent repo: `ov -C image/fedora image build
 #  fedora-coder`, or anywhere: `ov --repo overthinkos/fedora image build
 #  fedora-coder`.
-version: 2026.156.1531
+version: 2026.157.311
 defaults:
     platform:
         - linux/amd64
@@ -44,14 +44,15 @@ defaults:
 import:
     # Shared build-config vocabulary (distro/builder/init) — flat root import.
     # Carries distro.fedora + the rpm format template.
-    - '@github.com/overthinkos/overthink/build.yml:v2026.146.0858'
+    - '@github.com/overthinkos/overthink/build.yml:v2026.157.0650'
     # Main repo entities under the `ov` namespace — ov.fedora /
     # ov.fedora-nonfree (consumer bases) + ov.fedora-builder (the builder each
     # consumer image routes pixi/npm/cargo to). Only edge is fedora → main.
-    - ov: '@github.com/overthinkos/overthink:v2026.146.0858'
+    - ov: '@github.com/overthinkos/overthink:v2026.157.0650'
     - box.yml
     - pod.yml
     - k8s.yml
+    - vm.yml
 eval:
     # Disposable R10 beds (kind: eval, target: pod) — one per fedora consumer
     # image. Ports remapped into the 4xxxx range so a bed run never collides
@@ -87,3 +88,36 @@ eval:
         description:
             feature: R10 bed for the fedora-test image — traefik + testapi on the Fedora base
             tag: [testing]
+    # rpm localpkg AUTO-RESOLVE witness on a disposable Fedora Cloud VM. The ov
+    # layer's localpkg: builds the overthink .rpm from the superproject pkg/fedora
+    # (rpmbuild in a fedora container on the host) and `dnf install`s it onto the
+    # guest — dnf AUTO-RESOLVES the package's mandatory deps from the Fedora repos
+    # (incl. tailscale, which IS in the Fedora repos). The witness FAILS if
+    # localpkg didn't install the overthink rpm or dnf didn't auto-resolve the set.
+    eval-fedora-vm:
+        target: vm
+        vm: fedora-vm
+        disposable: true
+        lifecycle: dev
+        add_candy:
+            - '@github.com/overthinkos/overthink/candy/ov:v2026.157.0650'
+        install_opts:
+            allow_repo_changes: true
+            allow_root_tasks: true
+            skip_incompatible: true # skip composed layers lacking a guest-format section; the localpkg .deb/.rpm Depends/Requires install the packages
+        eval:
+            - id: localpkg-rpm-autoresolve
+              scope: deploy
+              description: ov installed as the overthink rpm via localpkg, mandatory deps auto-resolved by dnf (incl. tailscale)
+              command: |
+                rpm -q overthink >/dev/null 2>&1 &&
+                rpm -q podman >/dev/null 2>&1 &&
+                rpm -q libvirt >/dev/null 2>&1 &&
+                rpm -q tailscale >/dev/null 2>&1 &&
+                rpm -q gocryptfs >/dev/null 2>&1 &&
+                command -v ov >/dev/null 2>&1 &&
+                ov version &&
+                echo LOCALPKG-RPM-AUTORESOLVE-OK
+              stdout:
+                - contains: LOCALPKG-RPM-AUTORESOLVE-OK
+              exit_status: 0
