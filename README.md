@@ -20,7 +20,7 @@ This repo contains **no layers, no build-config, and no base of its own**.
 Everything is pulled from `github.com/overthinkos/overthink` by **github
 reference**:
 
-- every layer in `image.yml` is an `@github.com/overthinkos/overthink/layers/<name>:<tag>` ref;
+- every layer in `box.yml` is an `@github.com/overthinkos/overthink/candy/<name>:<tag>` ref;
 - the shared build-config (`build.yml` — distro/builder/init, including the
   `fedora` distro definition + the `rpm` format template) is a remote `include:`;
 - the Fedora base stack (`fedora` + `fedora-builder` + `fedora-nonfree`) is a
@@ -54,7 +54,7 @@ The only edge is `fedora → main` (this repo pulls layers + `build.yml` +
 
 ```bash
 # Inside the submodule (the build verb defaults to overthink.yml):
-ov image build fedora-coder
+ov box build fedora-coder
 
 # From the parent overthink repo:
 ov -C image/fedora image build fedora-coder

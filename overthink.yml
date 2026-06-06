@@ -26,7 +26,7 @@
 #      boundary, so each consumer image below declares its own explicit
 #      `builder:` map routing the formats it builds to ov.fedora-builder.
 #
-#  Directly buildable: `ov image build fedora-coder` (the build verb defaults to
+#  Directly buildable: `ov box build fedora-coder` (the build verb defaults to
 #  this overthink.yml). From the parent repo: `ov -C image/fedora image build
 #  fedora-coder`, or anywhere: `ov --repo overthinkos/fedora image build
 #  fedora-coder`.
@@ -77,7 +77,7 @@ eval:
         lifecycle: dev
         port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
         description:
-            feature: R10 bed for the fedora-ov image — minimal ov toolchain + sshd + nvidia on the Fedora base
+            feature: R10 bed for the fedora-ov box — minimal ov toolchain + sshd + nvidia on the Fedora base
             tag: [testing]
     eval-fedora-test-pod:
         target: pod
