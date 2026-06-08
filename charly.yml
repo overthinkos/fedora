@@ -1,36 +1,36 @@
 #  overthinkos/fedora — the Fedora image-family showcase, split out of the main
-#  overthink repo (2026-05). Mounted as a git submodule at image/fedora.
+#  opencharly repo (2026-05). Mounted as a git submodule at image/fedora.
 #
 #  SINGLE-FILE config (2026-05 import-namespace cutover): every local entity
-#  (the Fedora consumer showcase images — fedora-coder / fedora-ov / fedora-test)
+#  (the Fedora consumer showcase images — fedora-coder / fedora-charly / fedora-test)
 #  is inlined here. This repo VENDORS NOTHING — every layer is an
 #  `@github.com/...` ref, the shared build-config (distro/builder/init) arrives
 #  via a flat `import:`, and the main repo's Fedora base stack arrives via the
-#  namespaced `ov` import.
+#  namespaced `charly` import.
 #
 #  Unlike debian/ubuntu (whose bases moved entirely) and like arch/cachyos, the
 #  Fedora base STAYS in the main repo: fedora is the ecosystem default base (~40
 #  main images root on fedora/fedora-nonfree, and fedora-builder is main's
 #  defaults.builder), so the base stack (fedora + fedora-builder + fedora-nonfree)
 #  lives in the main repo's base.yml. It is reached here by importing main under
-#  the `ov` namespace (`ov.fedora`, `ov.fedora-nonfree`, `ov.fedora-builder`).
+#  the `charly` namespace (`charly.fedora`, `charly.fedora-nonfree`, `charly.fedora-builder`).
 #  Nothing in main consumes any image here, so there is NO main → fedora
 #  coupling — the only edge is fedora → main.
 #
 #  import: has two shapes —
 #    * flat string  → build.yml (shared distro/builder/init vocabulary), merged
 #      into this repo's root namespace.
-#    * `ov: <ref>`  → the main overthink repo mounted under the `ov` namespace,
-#      so the Fedora base stack (ov.fedora / ov.fedora-nonfree /
-#      ov.fedora-builder) resolves. Builder maps do NOT cross a namespace
+#    * `charly: <ref>`  → the main opencharly repo mounted under the `charly` namespace,
+#      so the Fedora base stack (charly.fedora / charly.fedora-nonfree /
+#      charly.fedora-builder) resolves. Builder maps do NOT cross a namespace
 #      boundary, so each consumer image below declares its own explicit
-#      `builder:` map routing the formats it builds to ov.fedora-builder.
+#      `builder:` map routing the formats it builds to charly.fedora-builder.
 #
-#  Directly buildable: `ov box build fedora-coder` (the build verb defaults to
-#  this overthink.yml). From the parent repo: `ov -C image/fedora image build
-#  fedora-coder`, or anywhere: `ov --repo overthinkos/fedora image build
+#  Directly buildable: `charly box build fedora-coder` (the build verb defaults to
+#  this charly.yml). From the parent repo: `charly -C image/fedora image build
+#  fedora-coder`, or anywhere: `charly --repo overthinkos/fedora image build
 #  fedora-coder`.
-version: 2026.157.311
+version: 2026.159.3
 defaults:
     platform:
         - linux/amd64
@@ -44,11 +44,11 @@ defaults:
 import:
     # Shared build-config vocabulary (distro/builder/init) — flat root import.
     # Carries distro.fedora + the rpm format template.
-    - '@github.com/overthinkos/overthink/build.yml:v2026.157.0650'
-    # Main repo entities under the `ov` namespace — ov.fedora /
-    # ov.fedora-nonfree (consumer bases) + ov.fedora-builder (the builder each
+    - '@github.com/overthinkos/overthink/build.yml:v2026.159.1458'
+    # Main repo entities under the `charly` namespace — charly.fedora /
+    # charly.fedora-nonfree (consumer bases) + charly.fedora-builder (the builder each
     # consumer image routes pixi/npm/cargo to). Only edge is fedora → main.
-    - ov: '@github.com/overthinkos/overthink:v2026.157.0650'
+    - charly: '@github.com/overthinkos/overthink:v2026.159.1458'
     - box.yml
     - pod.yml
     - k8s.yml
@@ -56,9 +56,9 @@ import:
 eval:
     # Disposable R10 beds (kind: eval, target: pod) — one per fedora consumer
     # image. Ports remapped into the 4xxxx range so a bed run never collides
-    # with a production deploy of the same image. `ov eval run <bed>` is the
+    # with a production deploy of the same image. `charly eval run <bed>` is the
     # canonical R10 gate: build → eval-image → deploy → eval-live → fresh
-    # update → teardown, all on isolated ov-<bed>-* volumes
+    # update → teardown, all on isolated charly-<bed>-* volumes
     # (deployVolumePrefix). `disposable: true` is the sole authorization for
     # the unattended destroy + rebuild.
     eval-fedora-coder-pod:
@@ -68,16 +68,16 @@ eval:
         lifecycle: dev
         port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
         description:
-            feature: R10 bed for the fedora-coder image — sshd + ov-mcp + 5 AI CLIs + DevOps tooling on the Fedora 43 + RPM Fusion base
+            feature: R10 bed for the fedora-coder image — sshd + charly-mcp + 5 AI CLIs + DevOps tooling on the Fedora 43 + RPM Fusion base
             tag: [testing]
-    eval-fedora-ov-pod:
+    eval-fedora-charly-pod:
         target: pod
-        box: fedora-ov
+        box: fedora-charly
         disposable: true
         lifecycle: dev
         port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
         description:
-            feature: R10 bed for the fedora-ov box — minimal ov toolchain + sshd + nvidia on the Fedora base
+            feature: R10 bed for the fedora-charly box — minimal charly toolchain + sshd + nvidia on the Fedora base
             tag: [testing]
     eval-fedora-test-pod:
         target: pod
@@ -88,19 +88,19 @@ eval:
         description:
             feature: R10 bed for the fedora-test image — traefik + testapi on the Fedora base
             tag: [testing]
-    # rpm localpkg AUTO-RESOLVE witness on a disposable Fedora Cloud VM. The ov
-    # layer's localpkg: builds the overthink .rpm from the superproject pkg/fedora
+    # rpm localpkg AUTO-RESOLVE witness on a disposable Fedora Cloud VM. The charly
+    # layer's localpkg: builds the opencharly .rpm from the superproject pkg/fedora
     # (rpmbuild in a fedora container on the host) and `dnf install`s it onto the
     # guest — dnf AUTO-RESOLVES the package's mandatory deps from the Fedora repos
     # (incl. tailscale, which IS in the Fedora repos). The witness FAILS if
-    # localpkg didn't install the overthink rpm or dnf didn't auto-resolve the set.
+    # localpkg didn't install the opencharly rpm or dnf didn't auto-resolve the set.
     eval-fedora-vm:
         target: vm
         vm: fedora-vm
         disposable: true
         lifecycle: dev
         add_candy:
-            - '@github.com/overthinkos/overthink/candy/ov:v2026.157.0650'
+            - '@github.com/overthinkos/overthink/candy/charly:v2026.159.1458'
         install_opts:
             allow_repo_changes: true
             allow_root_tasks: true
@@ -108,15 +108,15 @@ eval:
         eval:
             - id: localpkg-rpm-autoresolve
               scope: deploy
-              description: ov installed as the overthink rpm via localpkg, mandatory deps auto-resolved by dnf (incl. tailscale)
+              description: charly installed as the opencharly rpm via localpkg, mandatory deps auto-resolved by dnf (incl. tailscale)
               command: |
-                rpm -q overthink >/dev/null 2>&1 &&
+                rpm -q opencharly >/dev/null 2>&1 &&
                 rpm -q podman >/dev/null 2>&1 &&
                 rpm -q libvirt >/dev/null 2>&1 &&
                 rpm -q tailscale >/dev/null 2>&1 &&
                 rpm -q gocryptfs >/dev/null 2>&1 &&
-                command -v ov >/dev/null 2>&1 &&
-                ov version &&
+                command -v charly >/dev/null 2>&1 &&
+                charly version &&
                 echo LOCALPKG-RPM-AUTORESOLVE-OK
               stdout:
                 - contains: LOCALPKG-RPM-AUTORESOLVE-OK

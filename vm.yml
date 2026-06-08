@@ -1,10 +1,10 @@
-#  Per-kind file for vm entries. Sibling of overthink.yml — imported via its
+#  Per-kind file for vm entries. Sibling of charly.yml — imported via its
 #  `import:` list. The schema kind discriminator is `kind: vm`; root-shape map is
 #  `vm:` (this file).
-version: 2026.157.311
+version: 2026.159.3
 vm:
     # Disposable Fedora Cloud VM — the substrate for eval-fedora-vm, which proves
-    # the rpm localpkg AUTO-RESOLVE deploy path (build the overthink .rpm in a
+    # the rpm localpkg AUTO-RESOLVE deploy path (build the opencharly .rpm in a
     # fedora container, dnf install onto the guest, mandatory deps auto-resolved).
     fedora-vm:
         source:

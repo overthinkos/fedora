@@ -1,6 +1,6 @@
 # overthinkos/fedora
 
-The **Fedora image-family showcase** for [Overthink](https://github.com/overthinkos/overthink),
+The **Fedora image-family showcase** for [OpenCharly](https://github.com/overthinkos/overthink),
 split into its own repository and mounted as a git submodule at `image/fedora`
 of the main repo.
 
@@ -8,7 +8,7 @@ of the main repo.
 
 | Kind | Entries |
 |---|---|
-| `image:` | `fedora-coder` (kitchen-sink dev image), `fedora-ov` (minimal ov toolchain, disabled), `fedora-test` (traefik/testapi integration fixture, disabled) |
+| `image:` | `fedora-coder` (kitchen-sink dev image), `fedora-charly` (minimal charly toolchain, disabled), `fedora-test` (traefik/testapi integration fixture, disabled) |
 
 The Fedora **base stack** (`fedora`, `fedora-builder`, `fedora-nonfree`) is
 **not** here — it stays in the main repo (see "Why the base stays in main"
@@ -22,9 +22,9 @@ reference**:
 
 - every layer in `box.yml` is an `@github.com/overthinkos/overthink/candy/<name>:<tag>` ref;
 - the shared build-config (`build.yml` — distro/builder/init, including the
-  `fedora` distro definition + the `rpm` format template) is a remote `include:`;
+  `fedora` distro definition + the `rpm` format template) is a remote `import:`;
 - the Fedora base stack (`fedora` + `fedora-builder` + `fedora-nonfree`) is a
-  remote `include:` of the main repo's `fedora-base.yml`.
+  remote `import:` of the main repo's `fedora-base.yml`.
 
 Layer refs + `build.yml` pin to the ecosystem layer tag; the `fedora-base.yml`
 file include pins to the fresh main tag that first carries it (the file does not
@@ -43,7 +43,7 @@ consumed them).
 
 ## No coupling with main
 
-Nothing in the main `overthink` repo consumes any image **here** (the showcase
+Nothing in the main `opencharly` repo consumes any image **here** (the showcase
 images have no in-main dependents), so there is **no main → fedora coupling**:
 main owns `fedora-base.yml` locally and remote-includes nothing from this repo.
 The only edge is `fedora → main` (this repo pulls layers + `build.yml` +
@@ -53,25 +53,25 @@ The only edge is `fedora → main` (this repo pulls layers + `build.yml` +
 ## Build
 
 ```bash
-# Inside the submodule (the build verb defaults to overthink.yml):
-ov box build fedora-coder
+# Inside the submodule (the build verb defaults to charly.yml):
+charly box build fedora-coder
 
-# From the parent overthink repo:
-ov -C image/fedora image build fedora-coder
+# From the parent opencharly repo:
+charly -C image/fedora image build fedora-coder
 
 # Standalone, against the published repo:
-ov --repo overthinkos/fedora image build fedora-coder
+charly --repo overthinkos/fedora image build fedora-coder
 ```
 
 The first build resolves the upstream github references into
-`~/.cache/ov/repos/` and materializes the referenced layers under
+`~/.cache/charly/repos/` and materializes the referenced layers under
 `.build/_layers/`.
 
 ## Requirements
 
 A build of any image here fetches from the upstream repo, so it needs network
-access and an `ov` recent enough to understand the config's schema version
-(`ov` hard-fails with an "update ov" message if the config is newer than the
+access and a `charly` recent enough to understand the config's schema version
+(`charly` hard-fails with an "update charly" message if the config is newer than the
 binary supports).
 
 ---
