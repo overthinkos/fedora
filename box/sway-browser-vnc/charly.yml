@@ -1,0 +1,52 @@
+box:
+    name: sway-browser-vnc
+    # Minimal Sway desktop + wayvnc (VNC) + Chrome (CDP) on the Fedora base.
+    base: charly.fedora
+    builder:
+        pixi: charly.fedora-builder
+        npm: charly.fedora-builder
+        cargo: charly.fedora-builder
+    platform:
+        - linux/amd64
+    candy:
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/sway-desktop-vnc:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/dbus:v2026.160.2017'
+    port:
+        - 5900:5900
+        - 9222:9222
+        - 9224:9224
+    eval:
+        - command: test -x /usr/bin/sway && test -x /usr/bin/wayvnc && test -x /usr/bin/google-chrome-stable
+          id: sway-browser-vnc-binaries
+          exit_status: 0
+        - command: supervisorctl status sway wayvnc | awk '{print $2}' | sort -u
+          id: sway-browser-vnc-services
+          scope: deploy
+          in_container: true
+          exit_status: 0
+          stdout:
+            - RUNNING
+        - cdp: status
+          id: sway-browser-vnc-cdp-up
+          scope: deploy
+          stdout:
+            - contains: ok
+        - vnc: status
+          id: sway-browser-vnc-vnc-up
+          scope: deploy
+          stdout:
+            - contains: ok
+        - wl: toplevel
+          id: sway-browser-vnc-wl-has-windows
+          scope: deploy
+        - dbus: list
+          id: sway-browser-vnc-dbus-notifications-registered
+          scope: deploy
+          stdout:
+            - contains: org.freedesktop.Notifications
+        - vnc: screenshot
+          id: sway-browser-vnc-vnc-framebuffer
+          scope: deploy
+          artifact: /tmp/sway-browser-vnc-fb.png
+          artifact_min_bytes: 5000
