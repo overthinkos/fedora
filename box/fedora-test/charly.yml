@@ -1,0 +1,17 @@
+box:
+    name: fedora-test
+    base: charly.fedora
+    # Builder maps do NOT cross the `charly` namespace boundary; testapi carries
+    # a pixi.toml, so route pixi (plus the standard npm/cargo) to main's
+    # fedora-builder under the `charly` namespace.
+    builder:
+        pixi: charly.fedora-builder
+        npm: charly.fedora-builder
+        cargo: charly.fedora-builder
+    candy:
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.160.0856'
+        - '@github.com/overthinkos/overthink/candy/traefik:v2026.160.0856'
+        - '@github.com/overthinkos/overthink/candy/testapi:v2026.160.0856'
+    port:
+        - 8000:8000
+        - 8080:8080

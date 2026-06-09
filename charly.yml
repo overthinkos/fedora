@@ -30,7 +30,7 @@
 #  this charly.yml). From the parent repo: `charly -C image/fedora image build
 #  fedora-coder`, or anywhere: `charly --repo overthinkos/fedora image build
 #  fedora-coder`.
-version: 2026.159.1912
+version: 2026.160.1301
 defaults:
     platform:
         - linux/amd64
@@ -42,17 +42,10 @@ defaults:
         auto: false
         max_mb: 128
 import:
-    # Shared build-config vocabulary (distro/builder/init) — flat root import.
-    # Carries distro.fedora + the rpm format template.
-    - '@github.com/overthinkos/overthink/build.yml:v2026.160.0856'
     # Main repo entities under the `charly` namespace — charly.fedora /
     # charly.fedora-nonfree (consumer bases) + charly.fedora-builder (the builder each
     # consumer image routes pixi/npm/cargo to). Only edge is fedora → main.
     - charly: '@github.com/overthinkos/overthink:v2026.160.0856'
-    - box.yml
-    - pod.yml
-    - k8s.yml
-    - vm.yml
 eval:
     # Disposable R10 beds (kind: eval, target: pod) — one per fedora consumer
     # image. Ports remapped into the 4xxxx range so a bed run never collides
@@ -121,3 +114,34 @@ eval:
               stdout:
                 - contains: LOCALPKG-RPM-AUTORESOLVE-OK
               exit_status: 0
+vm:
+    # Disposable Fedora Cloud VM — the substrate for eval-fedora-vm, which proves
+    # the rpm localpkg AUTO-RESOLVE deploy path (build the opencharly .rpm in a
+    # fedora container, dnf install onto the guest, mandatory deps auto-resolved).
+    fedora-vm:
+        source:
+            kind: cloud_image
+            url: https://download.fedoraproject.org/pub/fedora/linux/releases/43/Cloud/x86_64/images/Fedora-Cloud-Base-Generic-43-1.6.x86_64.qcow2
+            checksum:
+                type: sha256
+            base_user: fedora
+        backend: libvirt
+        disk_size: 20G
+        ram: 4G
+        cpu: 2
+        machine: q35
+        firmware: bios
+        ssh:
+            port_auto: true
+            key_source: generate
+        cloud_init:
+            timezone: UTC
+            package:
+                - sudo
+pod: {}
+k8s: {}
+discover:
+    - path: box
+      recursive: true
+    - path: candy
+      recursive: true
