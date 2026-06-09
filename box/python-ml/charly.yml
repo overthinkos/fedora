@@ -1,10 +1,9 @@
 box:
     name: python-ml
     # GPU-accelerated Python ML environment (PyTorch / transformers / vLLM /
-    # llama.cpp) on the local nvidia base. Disabled by default (heavy GPU
-    # image). The python-ml layer owns the pixi.toml, so an explicit builder
-    # map is required (builder maps do not cross the `charly` namespace boundary).
-    enabled: false
+    # llama.cpp) on the local nvidia base (a heavy GPU image). The python-ml
+    # layer owns the pixi.toml, so an explicit builder map is required (builder
+    # maps do not cross the `charly` namespace boundary).
     base: nvidia
     builder:
         pixi: charly.fedora-builder
