@@ -2,7 +2,7 @@
 #  opencharly repo (2026-05). Mounted as a git submodule at image/fedora.
 #
 #  SINGLE-FILE config (2026-05 import-namespace cutover): every local entity
-#  (the Fedora consumer showcase images — fedora-coder / fedora-charly / fedora-test)
+#  (the Fedora consumer showcase images — fedora-coder / charly-fedora / fedora-test)
 #  is inlined here. This repo VENDORS NOTHING — every layer is an
 #  `@github.com/...` ref, the shared build-config (distro/builder/init) arrives
 #  via a flat `import:`, and the main repo's Fedora base stack arrives via the
@@ -30,7 +30,7 @@
 #  this charly.yml). From the parent repo: `charly -C image/fedora image build
 #  fedora-coder`, or anywhere: `charly --repo overthinkos/fedora image build
 #  fedora-coder`.
-version: 2026.159.3
+version: 2026.159.1912
 defaults:
     platform:
         - linux/amd64
@@ -44,11 +44,11 @@ defaults:
 import:
     # Shared build-config vocabulary (distro/builder/init) — flat root import.
     # Carries distro.fedora + the rpm format template.
-    - '@github.com/overthinkos/overthink/build.yml:v2026.159.1458'
+    - '@github.com/overthinkos/overthink/build.yml:v2026.160.0856'
     # Main repo entities under the `charly` namespace — charly.fedora /
     # charly.fedora-nonfree (consumer bases) + charly.fedora-builder (the builder each
     # consumer image routes pixi/npm/cargo to). Only edge is fedora → main.
-    - charly: '@github.com/overthinkos/overthink:v2026.159.1458'
+    - charly: '@github.com/overthinkos/overthink:v2026.160.0856'
     - box.yml
     - pod.yml
     - k8s.yml
@@ -70,14 +70,14 @@ eval:
         description:
             feature: R10 bed for the fedora-coder image — sshd + charly-mcp + 5 AI CLIs + DevOps tooling on the Fedora 43 + RPM Fusion base
             tag: [testing]
-    eval-fedora-charly-pod:
+    eval-charly-fedora-pod:
         target: pod
-        box: fedora-charly
+        box: charly-fedora
         disposable: true
         lifecycle: dev
         port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
         description:
-            feature: R10 bed for the fedora-charly box — minimal charly toolchain + sshd + nvidia on the Fedora base
+            feature: R10 bed for the charly-fedora box — minimal charly toolchain + sshd + nvidia on the Fedora base
             tag: [testing]
     eval-fedora-test-pod:
         target: pod
@@ -100,7 +100,7 @@ eval:
         disposable: true
         lifecycle: dev
         add_candy:
-            - '@github.com/overthinkos/overthink/candy/charly:v2026.159.1458'
+            - '@github.com/overthinkos/overthink/candy/charly:v2026.160.0856'
         install_opts:
             allow_repo_changes: true
             allow_root_tasks: true

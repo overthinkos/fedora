@@ -8,7 +8,7 @@ of the main repo.
 
 | Kind | Entries |
 |---|---|
-| `image:` | `fedora-coder` (kitchen-sink dev image), `fedora-charly` (minimal charly toolchain, disabled), `fedora-test` (traefik/testapi integration fixture, disabled) |
+| `image:` | `fedora-coder` (kitchen-sink dev image), `charly-fedora` (minimal charly toolchain, disabled), `fedora-test` (traefik/testapi integration fixture, disabled) |
 
 The Fedora **base stack** (`fedora`, `fedora-builder`, `fedora-nonfree`) is
 **not** here — it stays in the main repo (see "Why the base stays in main"
