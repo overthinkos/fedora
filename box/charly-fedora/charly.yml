@@ -9,11 +9,11 @@ box:
         npm: charly.fedora-builder
         cargo: charly.fedora-builder
     candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.160.0856'
-        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.160.0856'
-        - '@github.com/overthinkos/overthink/candy/charly:v2026.160.0856'
-        - '@github.com/overthinkos/overthink/candy/golang:v2026.160.0856'
-        - '@github.com/overthinkos/overthink/candy/gh:v2026.160.0856'
-        - '@github.com/overthinkos/overthink/candy/sshd:v2026.160.0856'
-        - '@github.com/overthinkos/overthink/candy/container-nesting:v2026.160.0856'
-        - '@github.com/overthinkos/overthink/candy/nvidia:v2026.160.0856'
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/charly:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/golang:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/gh:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/sshd:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/container-nesting:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/nvidia:v2026.160.2017'

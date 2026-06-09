@@ -45,7 +45,7 @@ import:
     # Main repo entities under the `charly` namespace — charly.fedora /
     # charly.fedora-nonfree (consumer bases) + charly.fedora-builder (the builder each
     # consumer image routes pixi/npm/cargo to). Only edge is fedora → main.
-    - charly: '@github.com/overthinkos/overthink:v2026.160.0856'
+    - charly: '@github.com/overthinkos/overthink:v2026.160.2017'
 eval:
     # Disposable R10 beds (kind: eval, target: pod) — one per fedora consumer
     # image. Ports remapped into the 4xxxx range so a bed run never collides
@@ -93,7 +93,7 @@ eval:
         disposable: true
         lifecycle: dev
         add_candy:
-            - '@github.com/overthinkos/overthink/candy/charly:v2026.160.0856'
+            - '@github.com/overthinkos/overthink/candy/charly:v2026.160.2017'
         install_opts:
             allow_repo_changes: true
             allow_root_tasks: true

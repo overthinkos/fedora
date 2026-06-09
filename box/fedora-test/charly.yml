@@ -9,9 +9,9 @@ box:
         npm: charly.fedora-builder
         cargo: charly.fedora-builder
     candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.160.0856'
-        - '@github.com/overthinkos/overthink/candy/traefik:v2026.160.0856'
-        - '@github.com/overthinkos/overthink/candy/testapi:v2026.160.0856'
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/traefik:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/testapi:v2026.160.2017'
     port:
         - 8000:8000
         - 8080:8080
