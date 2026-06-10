@@ -102,7 +102,9 @@ eval:
     # Relocated from main (2026-06 box inversion) with their boxes — bare local
     # box refs (eval-pod / jupyter / jupyter-ml now live under box/ in this
     # submodule). Per-box R10 beds; the cross-deployment mechanism beds
-    # (eval-cross-*) stay in main since their driver template does.
+    # (eval-cross-*) also live here now (below, before vm:) — their web /
+    # chrome-headless fixtures and the eval-cross-local-driver template are
+    # local to this submodule.
     eval-pod:
         target: pod
         box: eval-pod
@@ -171,6 +173,123 @@ eval:
               stdout:
                 - contains: LOCALPKG-RPM-AUTORESOLVE-OK
               exit_status: 0
+    # Cross-deployment probing (pod→pod): a Chrome DRIVER pod (peer) CDP-probes
+    # this web-server SUBJECT pod over the shared `charly` network. Proves `on:` +
+    # ${PEER_HOST:<subject>} + peer: end-to-end — the canonical "a different kind
+    # of deployment tests another" case. The chrome peer is brought up ALONGSIDE
+    # the root by bringUpPeers (the shared deploy+eval lifecycle, R3); it is an
+    # instrument, never eval-live'd itself.
+    eval-cross-pod-cdp:
+        target: pod
+        box: web
+        disposable: true
+        lifecycle: dev
+        port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
+        peer:
+            chrome:
+                target: pod
+                box: chrome-headless
+                port: [auto] # chrome's CDP 9222 published so host-side `charly eval cdp` reaches it
+        description:
+            feature: Cross-deployment CDP — a Chrome driver pod probes a separate web subject pod
+            tag: [working]
+        eval:
+            # The subject's nginx fixture serves the marker on :8080.
+            - id: web-fixture-up
+              scope: deploy
+              http: http://127.0.0.1:${HOST_PORT:8080}/
+              status: 200
+              body:
+                - contains: charly-fixture-web-content-marker
+            # DRIVE: the chrome peer navigates a REAL browser to THIS subject over
+            # the shared `charly` net (${PEER_HOST:<subject>} → charly-<bed> container DNS).
+            - id: cdp-open-web-subject
+              scope: deploy
+              cdp: open
+              on: chrome
+              url: http://${PEER_HOST:eval-cross-pod-cdp}:8080
+              eventually: 45s
+              retry_interval: 3s
+            # ASSERT: the rendered page carries the subject's fixture marker —
+            # proof the cross-deployment CDP probe actually drove the browser.
+            - id: cdp-web-fixture-rendered
+              scope: deploy
+              cdp: text
+              on: chrome
+              tab: "1"
+              eventually: 30s
+              retry_interval: 3s
+              stdout:
+                - contains: charly-fixture-web-content-marker
+    # Cross-deployment probing ACROSS KINDS (local→VM): a LOCAL (host) DRIVER
+    # curls a web-server SUBJECT running in a VM. The driver reaches the guest's
+    # nginx :80 via ${PEER_ENDPOINT:<bed>:80} → resolveEvalEndpoint's VM branch →
+    # `ssh -L 127.0.0.1:<rand>:127.0.0.1:80` over the managed charly-web-vm alias —
+    # the SAME host-vantage resolver eval-cross-local-http uses for a pod subject;
+    # only the subject KIND differs (VM vs pod), so this is the cross-kind proof
+    # with ZERO VM-specific eval code. A pod driver can't reach a host-vantage
+    # 127.0.0.1 (its own netns), so the generic, no-hack VM driver runs host-side.
+    eval-cross-vm-http:
+        target: vm
+        vm: web-vm
+        disposable: true
+        lifecycle: dev
+        peer:
+            host-driver-vm:
+                target: local
+                local: eval-cross-local-driver
+        description:
+            feature: Cross-deployment across kinds — a local host driver HTTP-probes a web subject in a VM
+            tag: [working]
+        eval:
+            # DRIVE: the local (host) driver curls the VM's nginx through the
+            # ssh-forward (${PEER_ENDPOINT} → 127.0.0.1:<forwarded 80>), dispatched
+            # through the local peer's host venue (on:). The forward's local
+            # listener binds as soon as the VM SSH is up; curl retries via
+            # `eventually:` until cloud-init finishes bringing nginx up.
+            - id: local-driver-reaches-vm
+              scope: deploy
+              command: "curl -fsS http://${PEER_ENDPOINT:eval-cross-vm-http:80}/"
+              on: host-driver-vm
+              eventually: 90s
+              retry_interval: 5s
+              stdout:
+                - contains: charly-fixture-vm-content-marker
+    # Cross-deployment across kinds (local→pod): a LOCAL (host) DRIVER curls a
+    # web-server SUBJECT pod via its published port. Exercises a NON-pod peer
+    # bring-up (`charly deploy add` the local driver) + `on:`-to-host-venue dispatch +
+    # ${PEER_ENDPOINT} (host-vantage addressing of a pod subject).
+    eval-cross-local-http:
+        target: pod
+        box: web
+        disposable: true
+        lifecycle: dev
+        port: [auto]
+        peer:
+            host-driver:
+                target: local
+                local: eval-cross-local-driver
+        description:
+            feature: Cross-deployment across kinds — a local host driver HTTP-probes a web subject pod
+            tag: [working]
+        eval:
+            - id: web-fixture-up
+              scope: deploy
+              http: http://127.0.0.1:${HOST_PORT:8080}/
+              status: 200
+              body:
+                - contains: charly-fixture-web-content-marker
+            # DRIVE: the local (host) driver curls the web pod via its published
+            # port (${PEER_ENDPOINT} → 127.0.0.1:<published 8080>, reachable from
+            # the host), dispatched through the local peer's host venue (on:).
+            - id: local-driver-reaches-web
+              scope: deploy
+              command: "curl -fsS http://${PEER_ENDPOINT:eval-cross-local-http:8080}/"
+              on: host-driver
+              eventually: 30s
+              retry_interval: 3s
+              stdout:
+                - contains: charly-fixture-web-content-marker
 vm:
     # Disposable Fedora Cloud VM — the substrate for eval-fedora-vm, which proves
     # the rpm localpkg AUTO-RESOLVE deploy path (build the opencharly .rpm in a
@@ -195,8 +314,75 @@ vm:
             timezone: UTC
             package:
                 - sudo
+    # Webserver-in-a-VM SUBJECT for the local→VM cross-deployment bed
+    # (eval-cross-vm-http): nginx serves a fixture marker on guest :80. A LOCAL
+    # (host) DRIVER peer reaches it via ${PEER_ENDPOINT:eval-cross-vm-http:80} →
+    # resolveEvalEndpoint's VM branch → `ssh -L 127.0.0.1:<rand>:127.0.0.1:80`
+    # over the managed charly-web-vm alias (the SAME host-vantage port resolver the
+    # pod beds use; the guest's :80 is reached through the SSH tunnel, never
+    # exposed on the host — strictly more secure than a host port-forward).
+    # ssh.port_auto picks a free host SSH port (the existing auto-port mechanism);
+    # backend: libvirt so the managed-alias SSH path is exercised, not a qemu
+    # fallthrough.
+    web-vm:
+        source:
+            kind: cloud_image
+            url: https://download.fedoraproject.org/pub/fedora/linux/releases/41/Cloud/x86_64/images/Fedora-Cloud-Base-Generic-41-1.4.x86_64.qcow2
+            checksum:
+                type: sha256
+                value: 6205ae0c524b4d1816dbd3573ce29b5c44ed26c9fbc874fbe48c41c89dd0bac2
+            base_user: fedora
+        disk_size: 6G
+        ram: 2G
+        cpu: 2
+        firmware: bios
+        backend: libvirt
+        network:
+            mode: user
+        ssh:
+            user: fedora
+            port_auto: true
+            key_source: generate
+        cloud_init:
+            package:
+                - nginx
+                - curl
+                - qemu-guest-agent
+            runcmd:
+                - "setenforce 0 || true"
+                - "sed -i 's/^SELINUX=.*/SELINUX=permissive/' /etc/selinux/config || true"
+                - "echo 'charly-fixture-vm-content-marker' > /usr/share/nginx/html/index.html"
+                - "systemctl enable --now nginx"
+                - "systemctl enable --now qemu-guest-agent"
+        libvirt:
+            devices:
+                channels:
+                    - type: unix
+                      name: org.qemu.guest_agent.0
+                      path: '{{.VmStateDir}}/qga.sock'
+                graphics:
+                    - type: spice
+                      autoport: "yes"
+                      listen: 127.0.0.1
+                video:
+                    - model: virtio
+                      heads: 1
+                      accel3d: false
 pod: {}
 k8s: {}
+local:
+    # =================================================================
+    # eval-cross-local-driver — host venue for the eval-cross-local-http bed's
+    # local DRIVER peer (cross-deployment, pod→ ... no: LOCAL driver → pod
+    # subject). USER-level only (no sudo), so bringUpPeers applies it unattended.
+    # =================================================================
+    eval-cross-local-driver:
+        candy:
+            - '@github.com/overthinkos/overthink/candy/eval-cross-local-driver-layer:v2026.160.2017'
+        description:
+            feature: Host venue for a cross-deployment local DRIVER peer
+            narrative: Minimal kind:local template establishing a host venue an `on:` check drives.
+            tag: [working]
 discover:
     - path: box
       recursive: true
