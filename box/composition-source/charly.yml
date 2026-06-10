@@ -14,7 +14,7 @@ box:
     eval:
         # NB: composition-source-charly is NOT a redundant presence check —
         # it is the image-SECTION fixture the `composition-import-selftest`
-        # recipe imports by id (scope:[image], select:[composition-source-charly])
+        # recipe imports by id (scope:[box], select:[composition-source-charly])
         # to prove image-scope test import works. Distinct from the charly
         # candy's layer-section `charly-binary`. Do not fold into the layer.
         - command: test -x /usr/bin/charly
