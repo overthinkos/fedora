@@ -1,5 +1,5 @@
 #  overthinkos/fedora — the Fedora image-family, a git submodule mounted at
-#  image/fedora. SELF-CONTAINED: it OWNS the full Fedora base stack locally
+#  box/fedora. SELF-CONTAINED: it OWNS the full Fedora base stack locally
 #  (fedora → fedora-nonfree → fedora-builder), the Fedora GPU base family
 #  (nvidia / python-ml), the consumer showcase images (fedora-coder /
 #  charly-fedora / fedora-test), the sway-browser-vnc desktop, and every
@@ -14,8 +14,8 @@
 #  except the @github candy refs.
 #
 #  Directly buildable: `charly box build fedora-coder` (the build verb defaults to
-#  this charly.yml). From the parent repo: `charly -C image/fedora image build
-#  fedora-coder`, or anywhere: `charly --repo overthinkos/fedora image build
+#  this charly.yml). From the parent repo: `charly -C box/fedora box build
+#  fedora-coder`, or anywhere: `charly --repo overthinkos/fedora box build
 #  fedora-coder`.
 version: 2026.160.1301
 # Canonical repo identity — lets the import-namespace loader recognize this repo

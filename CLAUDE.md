@@ -1,4 +1,4 @@
-# image/fedora — signpost (not the rule-set)
+# box/fedora — signpost (not the rule-set)
 
 This submodule is **self-contained**: it OWNS the full Fedora base/builder stack
 locally (`fedora` → `fedora-nonfree` → `fedora-builder`), the Fedora **GPU base

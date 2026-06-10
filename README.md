@@ -1,7 +1,7 @@
 # overthinkos/fedora
 
 The **Fedora image-family** for [OpenCharly](https://github.com/overthinkos/overthink),
-split into its own repository and mounted as a git submodule at `image/fedora`
+split into its own repository and mounted as a git submodule at `box/fedora`
 of the main repo.
 
 ## What's here
@@ -54,10 +54,10 @@ This repo imports nothing back. The image DAG stays acyclic
 charly box build fedora-coder
 
 # From the parent opencharly repo:
-charly -C image/fedora image build fedora-coder
+charly -C box/fedora box build fedora-coder
 
 # Standalone, against the published repo:
-charly --repo overthinkos/fedora image build fedora-coder
+charly --repo overthinkos/fedora box build fedora-coder
 ```
 
 The first build resolves the upstream github references into
