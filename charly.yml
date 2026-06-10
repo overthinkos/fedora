@@ -112,7 +112,7 @@ eval:
         lifecycle: dev
         port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
         description:
-            feature: Combined fast pod bed — kind:image + kind:layer + kind:pod + DeployTarget mechanisms
+            feature: Combined fast pod bed — kind:box + kind:candy + kind:pod + DeployTarget mechanisms
             tag: [working]
         eval:
             - id: status-shows-pod
