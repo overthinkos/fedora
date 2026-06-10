@@ -1,0 +1,6 @@
+box:
+    # phase5 selftest: minimal sshd-only image for selftest-layer pod.
+    name: selftest-layer
+    base: fedora
+    candy:
+        - '@github.com/overthinkos/overthink/candy/sshd:v2026.160.2017'

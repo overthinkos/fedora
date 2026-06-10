@@ -1,13 +1,13 @@
 box:
     name: fedora-coder
-    base: charly.fedora-nonfree
+    base: fedora-nonfree
     # Builder maps do NOT cross the `charly` namespace boundary; route the
     # formats this image builds (pixi via pixi/uv, npm via nodejs, cargo
     # via rust) to main's fedora-builder under the `charly` namespace.
     builder:
-        pixi: charly.fedora-builder
-        npm: charly.fedora-builder
-        cargo: charly.fedora-builder
+        pixi: fedora-builder
+        npm: fedora-builder
+        cargo: fedora-builder
     candy:
         - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.160.2017'
         - '@github.com/overthinkos/overthink/candy/sshd:v2026.160.2017'

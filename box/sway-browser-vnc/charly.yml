@@ -1,11 +1,11 @@
 box:
     name: sway-browser-vnc
     # Minimal Sway desktop + wayvnc (VNC) + Chrome (CDP) on the Fedora base.
-    base: charly.fedora
+    base: fedora
     builder:
-        pixi: charly.fedora-builder
-        npm: charly.fedora-builder
-        cargo: charly.fedora-builder
+        pixi: fedora-builder
+        npm: fedora-builder
+        cargo: fedora-builder
     platform:
         - linux/amd64
     candy:

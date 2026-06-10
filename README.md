@@ -1,53 +1,50 @@
 # overthinkos/fedora
 
-The **Fedora image-family showcase** for [OpenCharly](https://github.com/overthinkos/overthink),
+The **Fedora image-family** for [OpenCharly](https://github.com/overthinkos/overthink),
 split into its own repository and mounted as a git submodule at `image/fedora`
 of the main repo.
 
 ## What's here
 
+This submodule is **self-contained** — it owns its entire Fedora stack locally:
+
 | Kind | Entries |
 |---|---|
-| `image:` | `fedora-coder` (kitchen-sink dev image), `charly-fedora` (minimal charly toolchain, disabled), `fedora-test` (traefik/testapi integration fixture, disabled) |
+| Base / builder boxes | `fedora`, `fedora-nonfree`, `fedora-builder` |
+| GPU base boxes | `nvidia`, `python-ml` |
+| Showcase / dev images | `fedora-coder` (kitchen-sink dev image), `charly-fedora` (minimal charly toolchain, disabled), `fedora-test` (traefik/testapi integration fixture, disabled) |
+| Desktop | `sway-browser-vnc` (minimal Sway + wayvnc + Chrome) |
+| Relocated app / fixture boxes | `jupyter`, `jupyter-ml`, `comfyui`, `ollama`, `unsloth-studio`, `immich`, `immich-ml`, `openwebui`, `hermes`, `web`, `eval-pod`, `redis`, `tier1`, `tier23`, … (~29 Fedora-rooted boxes, all discovered under `box/`) |
 
-The Fedora **base stack** (`fedora`, `fedora-builder`, `fedora-nonfree`) is
-**not** here — it stays in the main repo (see "Why the base stays in main"
-below).
+Every box's base is a bare **local** name (`base: fedora` / `fedora-nonfree` /
+`nvidia`); the distro/builder/init build vocabulary is embedded in the `charly`
+binary.
 
-## Composition by reference — nothing is vendored
+## Composition — local bases, candies by reference
 
-This repo contains **no layers, no build-config, and no base of its own**.
-Everything is pulled from `github.com/overthinkos/overthink` by **github
-reference**:
+This repo owns its bases and build targets locally, but **vendors no candies**:
 
-- every layer in `box.yml` is an `@github.com/overthinkos/overthink/candy/<name>:<tag>` ref;
-- the shared build-config (`build.yml` — distro/builder/init, including the
-  `fedora` distro definition + the `rpm` format template) is a remote `import:`;
-- the Fedora base stack (`fedora` + `fedora-builder` + `fedora-nonfree`) is a
-  remote `import:` of the main repo's `fedora-base.yml`.
+- the Fedora base/builder stack (`fedora` → `fedora-nonfree` → `fedora-builder`)
+  and the GPU base (`nvidia` / `python-ml`) are **local boxes** under `box/`,
+  referenced by bare name (`base: fedora`, `base: nvidia`);
+- every candy is an `@github.com/overthinkos/overthink/candy/<name>:<tag>` ref
+  into the main repo's shared candy library — there is no `candy/` dir here;
+- the distro/builder/init build vocabulary is embedded in the `charly` binary
+  (no remote build-config import).
 
-Layer refs + `build.yml` pin to the ecosystem layer tag; the `fedora-base.yml`
-file include pins to the fresh main tag that first carries it (the file does not
-exist at the older ecosystem layer tag). There is exactly one definition of
-every layer/base — no duplication.
+There is **no namespace import** (`import: []`); nothing here depends on the main
+repo except the `@github` candy refs.
 
-## Why the base stays in main (arch precedent, not debian's)
+## Coupling with main (post-inversion, one-directional)
 
-Fedora is the ecosystem **default base**: ~40 main images root on `fedora` /
-`fedora-nonfree` (jupyter, immich, hermes, selkies-desktop, nvidia, the openclaw
-family, the eval beds, …) and `fedora-builder` is main's `defaults.builder`. So
-the base stack physically belongs in main — it lives in the main repo's
-`fedora-base.yml`, included locally by main AND remotely by this repo (the **arch
-precedent**; debian/ubuntu moved their bases entirely because nothing in main
-consumed them).
+After the box-inversion cutover this repo is the canonical home of the Fedora
+base stack and every Fedora-rooted box, so the dependency is **one-directional**:
 
-## No coupling with main
+- **main → fedora**: the main `opencharly` repo imports this repo under the
+  `fedora` namespace to build the relocated boxes;
+- **fedora → main**: only the `@github` candy refs into the shared candy library.
 
-Nothing in the main `opencharly` repo consumes any image **here** (the showcase
-images have no in-main dependents), so there is **no main → fedora coupling**:
-main owns `fedora-base.yml` locally and remote-includes nothing from this repo.
-The only edge is `fedora → main` (this repo pulls layers + `build.yml` +
-`fedora-base.yml`). The image DAG is acyclic
+This repo imports nothing back. The image DAG stays acyclic
 (`fedora-coder → fedora-nonfree → fedora → quay.io/fedora/fedora:43`).
 
 ## Build

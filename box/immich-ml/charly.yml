@@ -1,0 +1,35 @@
+box:
+    name: immich-ml
+    base: fedora
+    platform:
+        - linux/amd64
+    candy:
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/nodejs:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/cuda:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/python-ml:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/postgresql:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/vectorchord:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/redis:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/immich:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/immich-ml:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/dbus:v2026.160.2017'
+    port:
+        - 2283:2283
+    eval:
+        - command: test -x /usr/bin/postgres && test -x /usr/bin/redis-server && test -x /opt/immich/machine-learning/.venv/bin/python && test -f /opt/immich/server/dist/main.js
+          id: immich-ml-stack-binaries
+          exit_status: 0
+        - command: supervisorctl status postgresql redis immich-server immich-ml | awk '{print $2}' | sort -u
+          id: immich-ml-services-running
+          scope: deploy
+          in_container: true
+          exit_status: 0
+          stdout:
+            - RUNNING
+        - command: curl -fsS http://127.0.0.1:3003/ping
+          id: immich-ml-internal-ping
+          scope: deploy
+          in_container: true
+          exit_status: 0

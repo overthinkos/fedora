@@ -1,45 +1,27 @@
-#  overthinkos/fedora — the Fedora image-family showcase, split out of the main
-#  opencharly repo (2026-05). Mounted as a git submodule at image/fedora.
+#  overthinkos/fedora — the Fedora image-family, a git submodule mounted at
+#  image/fedora. SELF-CONTAINED: it OWNS the full Fedora base stack locally
+#  (fedora → fedora-nonfree → fedora-builder), the Fedora GPU base family
+#  (nvidia / python-ml), the consumer showcase images (fedora-coder /
+#  charly-fedora / fedora-test), the sway-browser-vnc desktop, and every
+#  Fedora-rooted app/fixture box — all discovered under box/.
 #
-#  SINGLE-FILE config (2026-05 import-namespace cutover): every local entity
-#  (the Fedora consumer showcase images — fedora-coder / charly-fedora /
-#  fedora-test — plus the Fedora GPU base family nvidia / python-ml and the
-#  sway-browser-vnc desktop, folded in from the retired overthinkos/nvidia +
-#  overthinkos/selkies submodules) is inlined here. This repo VENDORS NOTHING —
-#  every layer is an
-#  `@github.com/...` ref, the shared build-config (distro/builder/init) arrives
-#  via a flat `import:`, and the main repo's Fedora base stack arrives via the
-#  namespaced `charly` import.
-#
-#  Unlike debian/ubuntu (whose bases moved entirely) and like arch/cachyos, the
-#  Fedora base STAYS in the main repo: fedora is the ecosystem default base (~40
-#  main images root on fedora/fedora-nonfree, and fedora-builder is main's
-#  defaults.builder), so the base stack (fedora + fedora-builder + fedora-nonfree)
-#  lives in the main repo's base.yml. It is reached here by importing main under
-#  the `charly` namespace (`charly.fedora`, `charly.fedora-nonfree`, `charly.fedora-builder`).
-#  main consumes the Fedora GPU base here as `base: fedora.nvidia` (its comfyui /
-#  jupyter-ml / jupyter-ml-notebook / ollama / unsloth-studio pod families) — a
-#  MUTUAL import (main mounts this repo under the `fedora` namespace; this repo
-#  imports main under `charly`), cycle-broken at load by repo identity (see the
-#  `repo:` field below). Like arch/cachyos; unlike debian/ubuntu.
-#
-#  import: has two shapes —
-#    * flat string  → build.yml (shared distro/builder/init vocabulary), merged
-#      into this repo's root namespace.
-#    * `charly: <ref>`  → the main opencharly repo mounted under the `charly` namespace,
-#      so the Fedora base stack (charly.fedora / charly.fedora-nonfree /
-#      charly.fedora-builder) resolves. Builder maps do NOT cross a namespace
-#      boundary, so each consumer image below declares its own explicit
-#      `builder:` map routing the formats it builds to charly.fedora-builder.
+#  This repo VENDORS NO CANDIES: every candy is an
+#  `@github.com/overthinkos/overthink/candy/<name>:<tag>` ref into the main
+#  opencharly repo's shared candy library. Bases resolve to LOCAL boxes by bare
+#  name (`base: fedora`, `base: nvidia`); the build vocabulary
+#  (distro/builder/init) comes from the charly binary's embedded defaults. There
+#  is NO namespace import (`import: []`) — nothing here depends on the main repo
+#  except the @github candy refs.
 #
 #  Directly buildable: `charly box build fedora-coder` (the build verb defaults to
 #  this charly.yml). From the parent repo: `charly -C image/fedora image build
 #  fedora-coder`, or anywhere: `charly --repo overthinkos/fedora image build
 #  fedora-coder`.
 version: 2026.160.1301
-# Canonical repo identity — lets the import-namespace loader cycle-break the
-# main ↔ fedora mutual import by repo identity (main imports this repo under the
-# `fedora` namespace for fedora.nvidia; this repo imports main under `charly`).
+# Canonical repo identity — lets the import-namespace loader recognize this repo
+# when main imports it under the `fedora` namespace to build the relocated boxes.
+# The dependency is one-directional: main imports fedora; fedora imports nothing
+# back (the former two-way main↔fedora import is dissolved).
 repo: github.com/overthinkos/fedora
 defaults:
     platform:
@@ -51,11 +33,8 @@ defaults:
     merge:
         auto: false
         max_mb: 128
-import:
-    # Main repo entities under the `charly` namespace — charly.fedora /
-    # charly.fedora-nonfree (consumer bases) + charly.fedora-builder (the builder each
-    # consumer image routes pixi/npm/cargo to). Only edge is fedora → main.
-    - charly: '@github.com/overthinkos/overthink:v2026.160.2017'
+# No namespace import: the fedora base stack is local; candies resolve via @github refs.
+import: []
 eval:
     # Disposable R10 beds (kind: eval, target: pod) — one per fedora consumer
     # image. Ports remapped into the 4xxxx range so a bed run never collides
@@ -97,7 +76,7 @@ eval:
     # eval: block adds the remaining deploy-scope probes (operator-side http, cdp
     # list, wl sway-tree, record). Publishes the image's canonical 5900/9222/9224.
     # sway-browser-vnc's canonical home (relocated from the retired
-    # overthinkos/selkies submodule; its base is charly.fedora).
+    # overthinkos/selkies submodule; its base is fedora).
     eval-sway-browser-vnc-pod:
         target: pod
         box: sway-browser-vnc
@@ -120,6 +99,45 @@ eval:
               scope: deploy
               record_name: eval-term
               record_mode: terminal
+    # Relocated from main (2026-06 box inversion) with their boxes — bare local
+    # box refs (eval-pod / jupyter / jupyter-ml now live under box/ in this
+    # submodule). Per-box R10 beds; the cross-deployment mechanism beds
+    # (eval-cross-*) stay in main since their driver template does.
+    eval-pod:
+        target: pod
+        box: eval-pod
+        disposable: true
+        lifecycle: dev
+        port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
+        description:
+            feature: Combined fast pod bed — kind:image + kind:layer + kind:pod + DeployTarget mechanisms
+            tag: [working]
+        eval:
+            - id: status-shows-pod
+              scope: deploy
+              command: charly status --json
+              in_container: false
+              stdout:
+                - contains: '"kind": "pod"'
+                - contains: eval-pod
+    eval-jupyter-pod:
+        target: pod
+        box: jupyter
+        disposable: true
+        lifecycle: dev
+        port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
+        description:
+            feature: R10 bed for jupyter-mcp regression coverage (auto-attach, canonicalization, idle-room sweep, cell_update id-preservation)
+            tag: [working]
+    eval-jupyter-ml-pod:
+        target: pod
+        box: jupyter-ml
+        disposable: true
+        lifecycle: dev
+        port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
+        description:
+            feature: R10 bed for jupyter-ml — exercises spacy-import, jupyterlab-quarto-enabled build-scope checks plus deploy-scope MCP probes against the GPU-backed image
+            tag: [testing]
     # rpm localpkg AUTO-RESOLVE witness on a disposable Fedora Cloud VM. The charly
     # layer's localpkg: builds the opencharly .rpm from the superproject pkg/fedora
     # (rpmbuild in a fedora container on the host) and `dnf install`s it onto the

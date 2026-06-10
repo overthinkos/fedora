@@ -1,0 +1,9 @@
+box:
+    name: valkey-test
+    base: fedora
+    candy:
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/valkey:v2026.160.2017'
+    port:
+        - 6379:6379

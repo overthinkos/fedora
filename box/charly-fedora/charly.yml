@@ -1,13 +1,13 @@
 box:
     name: charly-fedora
-    base: charly.fedora
+    base: fedora
     # Builder maps do NOT cross the `charly` namespace boundary; route the
     # standard build formats to main's fedora-builder under the `charly`
     # namespace so any pixi/npm/cargo layer added here resolves.
     builder:
-        pixi: charly.fedora-builder
-        npm: charly.fedora-builder
-        cargo: charly.fedora-builder
+        pixi: fedora-builder
+        npm: fedora-builder
+        cargo: fedora-builder
     candy:
         - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.160.2017'
         - '@github.com/overthinkos/overthink/candy/supervisord:v2026.160.2017'

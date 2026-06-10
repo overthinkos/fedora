@@ -1,0 +1,17 @@
+box:
+    name: filebrowser
+    base: fedora
+    candy:
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/filebrowser:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/dbus:v2026.160.2017'
+    port:
+        - 8085:8080
+    eval:
+        - command: test -x /usr/local/bin/filebrowser && test -x /usr/bin/dbus-daemon
+          id: filebrowser-composed-binaries
+          exit_status: 0
+        - file: ${VOLUME_CONTAINER_PATH:data}
+          id: filebrowser-volumes-exist
+          scope: deploy
+          filetype: directory

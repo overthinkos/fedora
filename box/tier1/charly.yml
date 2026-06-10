@@ -1,0 +1,5 @@
+box:
+    name: tier1
+    base: fedora
+    candy:
+        - '@github.com/overthinkos/overthink/candy/eval-tier1-layer:v2026.160.2017'
