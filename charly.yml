@@ -17,7 +17,7 @@
 #  this charly.yml). From the parent repo: `charly -C box/fedora box build
 #  fedora-coder`, or anywhere: `charly --repo overthinkos/fedora box build
 #  fedora-coder`.
-version: 2026.161.1301
+version: 2026.161.1502
 # Canonical repo identity — lets the import-namespace loader recognize this repo
 # when main imports it under the `fedora` namespace to build the relocated boxes.
 # The dependency is one-directional: main imports fedora; fedora imports nothing
