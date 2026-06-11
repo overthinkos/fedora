@@ -10,7 +10,7 @@ box:
     name: composition-source
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/charly:v2026.162.0847'
+        - '@github.com/overthinkos/overthink/candy/charly:v2026.162.1355'
     eval:
         # NB: composition-source-charly is NOT a redundant presence check —
         # it is the image-SECTION fixture the `composition-import-selftest`

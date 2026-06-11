@@ -12,5 +12,5 @@ box:
     platform:
         - linux/amd64
     candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.162.0847'
-        - '@github.com/overthinkos/overthink/candy/python-ml:v2026.162.0847'
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.162.1355'
+        - '@github.com/overthinkos/overthink/candy/python-ml:v2026.162.1355'

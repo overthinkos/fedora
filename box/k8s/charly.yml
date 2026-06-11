@@ -3,5 +3,5 @@ box:
     name: k8s
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.162.0847'
-        - '@github.com/overthinkos/overthink/candy/k8s-layer:v2026.162.0847'
+        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.162.1355'
+        - '@github.com/overthinkos/overthink/candy/k8s-layer:v2026.162.1355'

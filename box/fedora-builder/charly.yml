@@ -10,9 +10,9 @@ box:
     # the base removes that ordering dependency entirely.
     base: fedora-nonfree
     candy:
-        - '@github.com/overthinkos/overthink/candy/pixi:v2026.162.0847'
-        - '@github.com/overthinkos/overthink/candy/nodejs:v2026.162.0847'
-        - '@github.com/overthinkos/overthink/candy/build-toolchain:v2026.162.0847'
+        - '@github.com/overthinkos/overthink/candy/pixi:v2026.162.1355'
+        - '@github.com/overthinkos/overthink/candy/nodejs:v2026.162.1355'
+        - '@github.com/overthinkos/overthink/candy/build-toolchain:v2026.162.1355'
     produce:
         - pixi
         - npm

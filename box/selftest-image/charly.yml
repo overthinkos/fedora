@@ -3,4 +3,4 @@ box:
     name: selftest-image
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/charly:v2026.162.0847'
+        - '@github.com/overthinkos/overthink/candy/charly:v2026.162.1355'

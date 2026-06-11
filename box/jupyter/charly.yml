@@ -2,18 +2,11 @@ box:
     name: jupyter
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.162.0847'
-        - '@github.com/overthinkos/overthink/candy/jupyter:v2026.162.0847'
-        - '@github.com/overthinkos/overthink/candy/notebook-templates:v2026.162.0847'
-        - '@github.com/overthinkos/overthink/candy/dbus:v2026.162.0847'
-    eval:
-        - command: find /workspace -maxdepth 3 -name "*.ipynb" | head -n 1
-          id: jupyter-notebook-templates-provisioned
-          scope: deploy
-          in_container: true
-          exit_status: 0
-          stdout:
-            - matches: \.ipynb
-        - command: ${HOME}/.pixi/envs/default/bin/jupyter server extension list 2>&1 | grep -i jupyter_mcp
-          id: jupyter-mcp-extension-enabled
-          exit_status: 0
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.162.1355'
+        - '@github.com/overthinkos/overthink/candy/jupyter:v2026.162.1355'
+        - '@github.com/overthinkos/overthink/candy/notebook-templates:v2026.162.1355'
+        - '@github.com/overthinkos/overthink/candy/dbus:v2026.162.1355'
+    # No box-level eval: the .ipynb-templates-provisioned probe lives on
+    # candy/notebook-templates (notebook-templates-present, covering all 5 boxes
+    # composing it), and the jupyter_mcp extension is covered by candy/jupyter-mcp
+    # (jupyter-mcp-config-enabled) + candy/jupyter's deploy-scope mcp-* probes.

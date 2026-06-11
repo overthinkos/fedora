@@ -2,14 +2,10 @@ box:
     name: filebrowser
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.162.0847'
-        - '@github.com/overthinkos/overthink/candy/filebrowser:v2026.162.0847'
-        - '@github.com/overthinkos/overthink/candy/dbus:v2026.162.0847'
-    eval:
-        - command: test -x /usr/local/bin/filebrowser && test -x /usr/bin/dbus-daemon
-          id: filebrowser-composed-binaries
-          exit_status: 0
-        - file: ${VOLUME_CONTAINER_PATH:data}
-          id: filebrowser-volumes-exist
-          scope: deploy
-          filetype: directory
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.162.1355'
+        - '@github.com/overthinkos/overthink/candy/filebrowser:v2026.162.1355'
+        - '@github.com/overthinkos/overthink/candy/dbus:v2026.162.1355'
+    # No box-level eval: the filebrowser + dbus-daemon binaries belong to their
+    # candies (filebrowser, dbus), and the `data`-volume probe belongs to
+    # candy/filebrowser (which declares the volume) — one candy check covers
+    # every box composing them.

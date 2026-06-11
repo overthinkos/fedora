@@ -2,15 +2,10 @@ box:
     name: openwebui
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.162.0847'
-        - '@github.com/overthinkos/overthink/candy/openwebui:v2026.162.0847'
-        - '@github.com/overthinkos/overthink/candy/dbus:v2026.162.0847'
-    eval:
-        - command: test -x ${HOME}/.local/bin/openwebui-entrypoint && test -x ${HOME}/.pixi/envs/default/bin/python
-          id: openwebui-composition
-          exit_status: 0
-        - command: printenv WEBUI_ADMIN_EMAIL
-          id: openwebui-required-env-injected
-          scope: deploy
-          in_container: true
-          exit_status: 0
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.162.1355'
+        - '@github.com/overthinkos/overthink/candy/openwebui:v2026.162.1355'
+        - '@github.com/overthinkos/overthink/candy/dbus:v2026.162.1355'
+    # No box-level eval: the openwebui-entrypoint binary + the WEBUI_ADMIN_EMAIL
+    # env probe live on candy/openwebui (openwebui-entrypoint +
+    # openwebui-admin-email-set); the pixi python is proven by the candy's
+    # openwebui-service running — one candy check covers every box composing it.

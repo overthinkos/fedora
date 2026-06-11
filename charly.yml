@@ -79,11 +79,10 @@ eval:
         box: sway-browser-vnc
         disposable: true
         lifecycle: dev
+        # cdp liveness is covered by candy/sway-desktop-vnc:sway-desktop-vnc-cdp-up
+        # (cdp: status); these inline checks are bed-specific deeper probes
+        # (tab list, sway IPC tree, terminal recording).
         eval:
-            - http: "http://127.0.0.1:${HOST_PORT:9222}/json/version"
-              id: esbv-pod-http-cdp
-              scope: deploy
-              status: 200
             - cdp: list
               id: esbv-pod-cdp-list
               scope: deploy
@@ -145,7 +144,7 @@ eval:
         disposable: true
         lifecycle: dev
         add_candy:
-            - '@github.com/overthinkos/overthink/candy/charly:v2026.162.0847'
+            - '@github.com/overthinkos/overthink/candy/charly:v2026.162.1355'
         install_opts:
             allow_repo_changes: true
             allow_root_tasks: true
@@ -368,7 +367,7 @@ local:
     # =================================================================
     eval-cross-local-driver:
         candy:
-            - '@github.com/overthinkos/overthink/candy/eval-cross-local-driver-layer:v2026.162.0847'
+            - '@github.com/overthinkos/overthink/candy/eval-cross-local-driver-layer:v2026.162.1355'
         description:
             feature: Host venue for a cross-deployment local DRIVER peer
             narrative: Minimal kind:local template establishing a host venue an `on:` check drives.

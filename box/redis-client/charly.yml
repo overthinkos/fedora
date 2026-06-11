@@ -3,5 +3,5 @@ box:
     name: redis-client
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.162.0847'
-        - '@github.com/overthinkos/overthink/candy/redis-client-layer:v2026.162.0847'
+        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.162.1355'
+        - '@github.com/overthinkos/overthink/candy/redis-client-layer:v2026.162.1355'

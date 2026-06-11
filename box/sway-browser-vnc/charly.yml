@@ -9,40 +9,10 @@ box:
     platform:
         - linux/amd64
     candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.162.0847'
-        - '@github.com/overthinkos/overthink/candy/sway-desktop-vnc:v2026.162.0847'
-        - '@github.com/overthinkos/overthink/candy/dbus:v2026.162.0847'
-    eval:
-        - command: test -x /usr/bin/sway && test -x /usr/bin/wayvnc && test -x /usr/bin/google-chrome-stable
-          id: sway-browser-vnc-binaries
-          exit_status: 0
-        - command: supervisorctl status sway wayvnc | awk '{print $2}' | sort -u
-          id: sway-browser-vnc-services
-          scope: deploy
-          in_container: true
-          exit_status: 0
-          stdout:
-            - RUNNING
-        - cdp: status
-          id: sway-browser-vnc-cdp-up
-          scope: deploy
-          stdout:
-            - contains: ok
-        - vnc: status
-          id: sway-browser-vnc-vnc-up
-          scope: deploy
-          stdout:
-            - contains: ok
-        - wl: toplevel
-          id: sway-browser-vnc-wl-has-windows
-          scope: deploy
-        - dbus: list
-          id: sway-browser-vnc-dbus-notifications-registered
-          scope: deploy
-          stdout:
-            - contains: org.freedesktop.Notifications
-        - vnc: screenshot
-          id: sway-browser-vnc-vnc-framebuffer
-          scope: deploy
-          artifact: /tmp/sway-browser-vnc-fb.png
-          artifact_min_bytes: 5000
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.162.1355'
+        - '@github.com/overthinkos/overthink/candy/sway-desktop-vnc:v2026.162.1355'
+        - '@github.com/overthinkos/overthink/candy/dbus:v2026.162.1355'
+    # No box-level eval: the full browser-VNC desktop verification (sway/wayvnc/
+    # chrome binaries + the running cdp/vnc/wl/dbus/framebuffer probes) belongs
+    # to candy/sway-desktop-vnc — the composite candy that assembles the
+    # desktop — so one check set covers every box composing it.
