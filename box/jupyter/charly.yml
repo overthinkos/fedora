@@ -2,10 +2,10 @@ box:
     name: jupyter
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.160.2017'
-        - '@github.com/overthinkos/overthink/candy/jupyter:v2026.160.2017'
-        - '@github.com/overthinkos/overthink/candy/notebook-templates:v2026.160.2017'
-        - '@github.com/overthinkos/overthink/candy/dbus:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.162.0847'
+        - '@github.com/overthinkos/overthink/candy/jupyter:v2026.162.0847'
+        - '@github.com/overthinkos/overthink/candy/notebook-templates:v2026.162.0847'
+        - '@github.com/overthinkos/overthink/candy/dbus:v2026.162.0847'
     eval:
         - command: find /workspace -maxdepth 3 -name "*.ipynb" | head -n 1
           id: jupyter-notebook-templates-provisioned

@@ -9,9 +9,9 @@ box:
     platform:
         - linux/amd64
     candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.160.2017'
-        - '@github.com/overthinkos/overthink/candy/sway-desktop-vnc:v2026.160.2017'
-        - '@github.com/overthinkos/overthink/candy/dbus:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.162.0847'
+        - '@github.com/overthinkos/overthink/candy/sway-desktop-vnc:v2026.162.0847'
+        - '@github.com/overthinkos/overthink/candy/dbus:v2026.162.0847'
     eval:
         - command: test -x /usr/bin/sway && test -x /usr/bin/wayvnc && test -x /usr/bin/google-chrome-stable
           id: sway-browser-vnc-binaries

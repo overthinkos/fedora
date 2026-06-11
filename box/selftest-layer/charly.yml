@@ -3,4 +3,4 @@ box:
     name: selftest-layer
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/sshd:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/sshd:v2026.162.0847'

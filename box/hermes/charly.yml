@@ -2,9 +2,9 @@ box:
     name: hermes
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.160.2017'
-        - '@github.com/overthinkos/overthink/candy/hermes-full:v2026.160.2017'
-        - '@github.com/overthinkos/overthink/candy/dbus:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.162.0847'
+        - '@github.com/overthinkos/overthink/candy/hermes-full:v2026.162.0847'
+        - '@github.com/overthinkos/overthink/candy/dbus:v2026.162.0847'
     eval:
         - command: test -x ${HOME}/.npm-global/bin/claude && test -x ${HOME}/.npm-global/bin/codex && test -x ${HOME}/.npm-global/bin/gemini && test -x ${HOME}/.pixi/envs/default/bin/hermes
           id: hermes-all-clis-present

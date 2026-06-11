@@ -6,6 +6,6 @@ box:
     name: eval-target
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/claude-code:v2026.160.2017'
-        - '@github.com/overthinkos/overthink/candy/charly-mcp:v2026.160.2017'
-        - '@github.com/overthinkos/overthink/candy/eval-target-layer:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/claude-code:v2026.162.0847'
+        - '@github.com/overthinkos/overthink/candy/charly-mcp:v2026.162.0847'
+        - '@github.com/overthinkos/overthink/candy/eval-target-layer:v2026.162.0847'

@@ -2,9 +2,9 @@ box:
     name: openwebui
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.160.2017'
-        - '@github.com/overthinkos/overthink/candy/openwebui:v2026.160.2017'
-        - '@github.com/overthinkos/overthink/candy/dbus:v2026.160.2017'
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.162.0847'
+        - '@github.com/overthinkos/overthink/candy/openwebui:v2026.162.0847'
+        - '@github.com/overthinkos/overthink/candy/dbus:v2026.162.0847'
     eval:
         - command: test -x ${HOME}/.local/bin/openwebui-entrypoint && test -x ${HOME}/.pixi/envs/default/bin/python
           id: openwebui-composition
