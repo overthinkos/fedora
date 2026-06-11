@@ -12,5 +12,3 @@ box:
         - '@github.com/overthinkos/overthink/candy/notebook-llm-on-supercomputers:v2026.160.2017'
         - '@github.com/overthinkos/overthink/candy/notebook-openrouter:v2026.160.2017'
         - '@github.com/overthinkos/overthink/candy/dbus:v2026.160.2017'
-    port:
-        - 8888:8888

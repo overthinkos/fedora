@@ -12,10 +12,6 @@ box:
         - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.160.2017'
         - '@github.com/overthinkos/overthink/candy/sway-desktop-vnc:v2026.160.2017'
         - '@github.com/overthinkos/overthink/candy/dbus:v2026.160.2017'
-    port:
-        - 5900:5900
-        - 9222:9222
-        - 9224:9224
     eval:
         - command: test -x /usr/bin/sway && test -x /usr/bin/wayvnc && test -x /usr/bin/google-chrome-stable
           id: sway-browser-vnc-binaries

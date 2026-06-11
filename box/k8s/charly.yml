@@ -5,5 +5,3 @@ box:
     candy:
         - '@github.com/overthinkos/overthink/candy/supervisord:v2026.160.2017'
         - '@github.com/overthinkos/overthink/candy/k8s-layer:v2026.160.2017'
-    port:
-        - 6443:6443

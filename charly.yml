@@ -17,7 +17,7 @@
 #  this charly.yml). From the parent repo: `charly -C box/fedora box build
 #  fedora-coder`, or anywhere: `charly --repo overthinkos/fedora box build
 #  fedora-coder`.
-version: 2026.161.1650
+version: 2026.161.2303
 # Canonical repo identity — lets the import-namespace loader recognize this repo
 # when main imports it under the `fedora` namespace to build the relocated boxes.
 # The dependency is one-directional: main imports fedora; fedora imports nothing
@@ -48,7 +48,6 @@ eval:
         box: fedora-coder
         disposable: true
         lifecycle: dev
-        port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
         description:
             feature: R10 bed for the fedora-coder image — sshd + charly-mcp + 5 AI CLIs + DevOps tooling on the Fedora 43 + RPM Fusion base
             tag: [testing]
@@ -57,7 +56,6 @@ eval:
         box: charly-fedora
         disposable: true
         lifecycle: dev
-        port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
         description:
             feature: R10 bed for the charly-fedora box — minimal charly toolchain + sshd + nvidia on the Fedora base
             tag: [testing]
@@ -66,7 +64,6 @@ eval:
         box: fedora-test
         disposable: true
         lifecycle: dev
-        port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
         description:
             feature: R10 bed for the fedora-test image — traefik + testapi on the Fedora base
             tag: [testing]
@@ -82,7 +79,6 @@ eval:
         box: sway-browser-vnc
         disposable: true
         lifecycle: dev
-        port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
         eval:
             - http: "http://127.0.0.1:${HOST_PORT:9222}/json/version"
               id: esbv-pod-http-cdp
@@ -110,7 +106,6 @@ eval:
         box: eval-pod
         disposable: true
         lifecycle: dev
-        port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
         description:
             feature: Combined fast pod bed — kind:box + kind:candy + kind:pod + DeployTarget mechanisms
             tag: [working]
@@ -127,7 +122,6 @@ eval:
         box: jupyter
         disposable: true
         lifecycle: dev
-        port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
         description:
             feature: R10 bed for jupyter-mcp regression coverage (auto-attach, canonicalization, idle-room sweep, cell_update id-preservation)
             tag: [working]
@@ -136,7 +130,6 @@ eval:
         box: jupyter-ml
         disposable: true
         lifecycle: dev
-        port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
         description:
             feature: R10 bed for jupyter-ml — exercises spacy-import, jupyterlab-quarto-enabled build-scope checks plus deploy-scope MCP probes against the GPU-backed image
             tag: [testing]
@@ -184,12 +177,10 @@ eval:
         box: web
         disposable: true
         lifecycle: dev
-        port: [auto] # auto-allocate free host ports (avoid fixed-port collisions)
         peer:
             chrome:
                 target: pod
                 box: chrome-headless
-                port: [auto] # chrome's CDP 9222 published so host-side `charly eval cdp` reaches it
         description:
             feature: Cross-deployment CDP — a Chrome driver pod probes a separate web subject pod
             tag: [working]
@@ -264,7 +255,6 @@ eval:
         box: web
         disposable: true
         lifecycle: dev
-        port: [auto]
         peer:
             host-driver:
                 target: local

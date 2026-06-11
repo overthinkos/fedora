@@ -4,5 +4,3 @@ box:
     candy:
         - '@github.com/overthinkos/overthink/candy/supervisord:v2026.160.2017'
         - '@github.com/overthinkos/overthink/candy/web-layer:v2026.160.2017'
-    port:
-        - 8080:8080

@@ -6,5 +6,3 @@ box:
     candy:
         - '@github.com/overthinkos/overthink/candy/supervisord:v2026.160.2017'
         - '@github.com/overthinkos/overthink/candy/chrome-headless:v2026.160.2017'
-    port:
-        - 9222:9222

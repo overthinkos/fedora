@@ -5,5 +5,3 @@ box:
         - '@github.com/overthinkos/overthink/candy/supervisord:v2026.160.2017'
         - '@github.com/overthinkos/overthink/candy/redis:v2026.160.2017'
         - '@github.com/overthinkos/overthink/candy/eval-redis-init-layer:v2026.160.2017'
-    port:
-        - 6379:6379
