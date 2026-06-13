@@ -15,11 +15,9 @@ box:
         - fedora:43
         - fedora
     produce: []
-    description:
-        feature: Combined fast check fixture — image/layer/pod/DeployTarget mechanism smoke
-        narrative: Two-layer fedora-minimal image backing the check-pod kind:check bed (`charly check run check-pod`) — covers kind:box build, kind:candy composition order, kind:pod runtime (nc :18794 + supervisord), and DeployTarget rendering (supervisord sleep).
-        tag:
-            - working
+    description: |-
+        Combined fast check fixture — image/layer/pod/DeployTarget mechanism smoke
+        Two-layer fedora-minimal image backing the check-pod kind:check bed (`charly check run check-pod`) — covers kind:box build, kind:candy composition order, kind:pod runtime (nc :18794 + supervisord), and DeployTarget rendering (supervisord sleep).
     candy:
         - '@github.com/overthinkos/overthink/candy/check-base-layer:v2026.164.1529'
         - '@github.com/overthinkos/overthink/candy/check-stack-layer:v2026.164.1529'

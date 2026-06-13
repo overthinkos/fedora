@@ -17,7 +17,7 @@
 #  this charly.yml). From the parent repo: `charly -C box/fedora box build
 #  fedora-coder`, or anywhere: `charly --repo overthinkos/fedora box build
 #  fedora-coder`.
-version: 2026.164.0004
+version: 2026.164.0006
 # Canonical repo identity — lets the import-namespace loader recognize this repo
 # when main imports it under the `fedora` namespace to build the relocated boxes.
 # The dependency is one-directional: main imports fedora; fedora imports nothing
@@ -48,25 +48,19 @@ check:
         box: fedora-coder
         disposable: true
         lifecycle: dev
-        description:
-            feature: R10 bed for the fedora-coder image — sshd + charly-mcp + 5 AI CLIs + DevOps tooling on the Fedora 43 + RPM Fusion base
-            tag: [testing]
+        description: R10 bed for the fedora-coder image — sshd + charly-mcp + 5 AI CLIs + DevOps tooling on the Fedora 43 + RPM Fusion base
     check-charly-fedora-pod:
         target: pod
         box: charly-fedora
         disposable: true
         lifecycle: dev
-        description:
-            feature: R10 bed for the charly-fedora box — minimal charly toolchain + sshd + nvidia on the Fedora base
-            tag: [testing]
+        description: R10 bed for the charly-fedora box — minimal charly toolchain + sshd + nvidia on the Fedora base
     check-fedora-test-pod:
         target: pod
         box: fedora-test
         disposable: true
         lifecycle: dev
-        description:
-            feature: R10 bed for the fedora-test image — traefik + testapi on the Fedora base
-            tag: [testing]
+        description: R10 bed for the fedora-test image — traefik + testapi on the Fedora base
     # check-sway-browser-vnc-pod deploys the SHIPPING sway-browser-vnc image
     # (Sway desktop + Chrome + wayvnc) on the Fedora base. The image bakes
     # binaries/services/cdp/vnc/wl/dbus + mcp (chrome-devtools-mcp layer); the
@@ -79,27 +73,24 @@ check:
         box: sway-browser-vnc
         disposable: true
         lifecycle: dev
-        scenario:
-            - name: esbv-pod-cdp-list
-              step:
-                - cdp: list
-                  id: esbv-pod-cdp-list
-                  context:
-                    - runtime
-            - name: esbv-pod-wl-sway-tree
-              step:
-                - wl: sway-tree
-                  id: esbv-pod-wl-sway-tree
-                  context:
-                    - runtime
-            - name: esbv-pod-record-start
-              step:
-                - record: start
-                  id: esbv-pod-record-start
-                  record_name: check-term
-                  record_mode: terminal
-                  context:
-                    - runtime
+        plan:
+            - check: cdp=list
+              cdp: list
+              id: esbv-pod-cdp-list
+              context:
+                - runtime
+            - check: wl=sway-tree
+              wl: sway-tree
+              id: esbv-pod-wl-sway-tree
+              context:
+                - runtime
+            - check: record=start
+              record: start
+              id: esbv-pod-record-start
+              record_name: check-term
+              record_mode: terminal
+              context:
+                - runtime
     # Relocated from main (2026-06 box inversion) with their boxes — bare local
     # box refs (check-pod / jupyter / jupyter-ml now live under box/ in this
     # submodule). Per-box R10 beds; the cross-deployment mechanism beds
@@ -111,36 +102,29 @@ check:
         box: check-pod
         disposable: true
         lifecycle: dev
-        description:
-            feature: Combined fast pod bed — kind:box + kind:candy + kind:pod + DeployTarget mechanisms
-            tag: [working]
-        scenario:
-            - name: status-shows-pod
-              step:
-                - id: status-shows-pod
-                  command: charly status --json
-                  in_container: false
-                  stdout:
-                    - contains: '"kind": "pod"'
-                    - contains: check-pod
-                  context:
-                    - runtime
+        description: Combined fast pod bed — kind:box + kind:candy + kind:pod + DeployTarget mechanisms
+        plan:
+            - check: command=charly status --json
+              id: status-shows-pod
+              command: charly status --json
+              in_container: false
+              stdout:
+                - contains: '"kind": "pod"'
+                - contains: check-pod
+              context:
+                - runtime
     check-jupyter-pod:
         target: pod
         box: jupyter
         disposable: true
         lifecycle: dev
-        description:
-            feature: R10 bed for jupyter-mcp regression coverage (auto-attach, canonicalization, idle-room sweep, cell_update id-preservation)
-            tag: [working]
+        description: R10 bed for jupyter-mcp regression coverage (auto-attach, canonicalization, idle-room sweep, cell_update id-preservation)
     check-jupyter-ml-pod:
         target: pod
         box: jupyter-ml
         disposable: true
         lifecycle: dev
-        description:
-            feature: R10 bed for jupyter-ml — exercises spacy-import, jupyterlab-quarto-enabled build-scope checks plus deploy-scope MCP probes against the GPU-backed image
-            tag: [testing]
+        description: R10 bed for jupyter-ml — exercises spacy-import, jupyterlab-quarto-enabled build-scope checks plus deploy-scope MCP probes against the GPU-backed image
     # rpm localpkg AUTO-RESOLVE witness on a disposable Fedora Cloud VM. The charly
     # layer's localpkg: builds the opencharly .rpm from the superproject pkg/fedora
     # (rpmbuild in a fedora container on the host) and `dnf install`s it onto the
@@ -158,25 +142,32 @@ check:
             allow_repo_changes: true
             allow_root_tasks: true
             skip_incompatible: true # skip composed layers lacking a guest-format section; the localpkg .deb/.rpm Depends/Requires install the packages
-        scenario:
-            - name: localpkg-rpm-autoresolve
-              step:
-                - id: localpkg-rpm-autoresolve
-                  description: charly installed as the opencharly rpm via localpkg, mandatory deps auto-resolved by dnf (incl. tailscale)
-                  command: |
-                    rpm -q opencharly >/dev/null 2>&1 &&
-                    rpm -q podman >/dev/null 2>&1 &&
-                    rpm -q libvirt >/dev/null 2>&1 &&
-                    rpm -q tailscale >/dev/null 2>&1 &&
-                    rpm -q gocryptfs >/dev/null 2>&1 &&
-                    command -v charly >/dev/null 2>&1 &&
-                    charly version &&
-                    echo LOCALPKG-RPM-AUTORESOLVE-OK
-                  stdout:
-                    - contains: LOCALPKG-RPM-AUTORESOLVE-OK
-                  exit_status: 0
-                  context:
-                    - runtime
+        plan:
+            - check: |
+                command=rpm -q opencharly >/dev/null 2>&1 &&
+                rpm -q podman >/dev/null 2>&1 &&
+                rpm -q libvirt >/dev/null 2>&1 &&
+                rpm -q tailscale >/dev/null 2>&1 &&
+                rpm -q gocryptfs >/dev/null 2>&1 &&
+                command -v charly >/dev/null 2>&1 &&
+                charly version &&
+                echo LOCALPKG-RPM-AUTORESOLVE-OK
+              id: localpkg-rpm-autoresolve
+              description: charly installed as the opencharly rpm via localpkg, mandatory deps auto-resolved by dnf (incl. tailscale)
+              command: |
+                rpm -q opencharly >/dev/null 2>&1 &&
+                rpm -q podman >/dev/null 2>&1 &&
+                rpm -q libvirt >/dev/null 2>&1 &&
+                rpm -q tailscale >/dev/null 2>&1 &&
+                rpm -q gocryptfs >/dev/null 2>&1 &&
+                command -v charly >/dev/null 2>&1 &&
+                charly version &&
+                echo LOCALPKG-RPM-AUTORESOLVE-OK
+              stdout:
+                - contains: LOCALPKG-RPM-AUTORESOLVE-OK
+              exit_status: 0
+              context:
+                - runtime
     # Cross-deployment probing (pod→pod): a Chrome DRIVER pod (peer) CDP-probes
     # this web-server SUBJECT pod over the shared `charly` network. Proves `on:` +
     # ${PEER_HOST:<subject>} + peer: end-to-end — the canonical "a different kind
@@ -192,46 +183,36 @@ check:
             chrome:
                 target: pod
                 box: chrome-headless
-        description:
-            feature: Cross-deployment CDP — a Chrome driver pod probes a separate web subject pod
-            tag: [working]
-        scenario:
-            - name: web-fixture-up
-              step:
-                # The subject's nginx fixture serves the marker on :8080.
-                - id: web-fixture-up
-                  http: http://127.0.0.1:${HOST_PORT:8080}/
-                  status: 200
-                  body:
-                    - contains: charly-fixture-web-content-marker
-                  context:
-                    - runtime
-            - name: cdp-open-web-subject
-              step:
-                # DRIVE: the chrome peer navigates a REAL browser to THIS subject over
-                # the shared `charly` net (${PEER_HOST:<subject>} → charly-<bed> container DNS).
-                - id: cdp-open-web-subject
-                  cdp: open
-                  on: chrome
-                  url: http://${PEER_HOST:check-cross-pod-cdp}:8080
-                  eventually: 45s
-                  retry_interval: 3s
-                  context:
-                    - runtime
-            - name: cdp-web-fixture-rendered
-              step:
-                # ASSERT: the rendered page carries the subject's fixture marker —
-                # proof the cross-deployment CDP probe actually drove the browser.
-                - id: cdp-web-fixture-rendered
-                  cdp: text
-                  on: chrome
-                  tab: "1"
-                  eventually: 30s
-                  retry_interval: 3s
-                  stdout:
-                    - contains: charly-fixture-web-content-marker
-                  context:
-                    - runtime
+        description: Cross-deployment CDP — a Chrome driver pod probes a separate web subject pod
+        plan:
+            - check: http=http://127.0.0.1:${HOST_PORT:8080}/
+              id: web-fixture-up
+              http: http://127.0.0.1:${HOST_PORT:8080}/
+              status: 200
+              body:
+                - contains: charly-fixture-web-content-marker
+              context:
+                - runtime
+            - check: cdp=open
+              id: cdp-open-web-subject
+              cdp: open
+              on: chrome
+              url: http://${PEER_HOST:check-cross-pod-cdp}:8080
+              eventually: 45s
+              retry_interval: 3s
+              context:
+                - runtime
+            - check: cdp=text
+              id: cdp-web-fixture-rendered
+              cdp: text
+              on: chrome
+              tab: "1"
+              eventually: 30s
+              retry_interval: 3s
+              stdout:
+                - contains: charly-fixture-web-content-marker
+              context:
+                - runtime
     # Cross-deployment probing ACROSS KINDS (local→VM): a LOCAL (host) DRIVER
     # curls a web-server SUBJECT running in a VM. The driver reaches the guest's
     # nginx :80 via ${PEER_ENDPOINT:<bed>:80} → resolveCheckEndpoint's VM branch →
@@ -249,26 +230,18 @@ check:
             host-driver-vm:
                 target: local
                 local: check-cross-local-driver
-        description:
-            feature: Cross-deployment across kinds — a local host driver HTTP-probes a web subject in a VM
-            tag: [working]
-        scenario:
-            - name: local-driver-reaches-vm
-              step:
-                # DRIVE: the local (host) driver curls the VM's nginx through the
-                # ssh-forward (${PEER_ENDPOINT} → 127.0.0.1:<forwarded 80>), dispatched
-                # through the local peer's host venue (on:). The forward's local
-                # listener binds as soon as the VM SSH is up; curl retries via
-                # `eventually:` until cloud-init finishes bringing nginx up.
-                - id: local-driver-reaches-vm
-                  command: "curl -fsS http://${PEER_ENDPOINT:check-cross-vm-http:80}/"
-                  on: host-driver-vm
-                  eventually: 90s
-                  retry_interval: 5s
-                  stdout:
-                    - contains: charly-fixture-vm-content-marker
-                  context:
-                    - runtime
+        description: Cross-deployment across kinds — a local host driver HTTP-probes a web subject in a VM
+        plan:
+            - check: command=curl -fsS http://${PEER_ENDPOINT:check-cross-vm-http:80}/
+              id: local-driver-reaches-vm
+              command: "curl -fsS http://${PEER_ENDPOINT:check-cross-vm-http:80}/"
+              on: host-driver-vm
+              eventually: 90s
+              retry_interval: 5s
+              stdout:
+                - contains: charly-fixture-vm-content-marker
+              context:
+                - runtime
     # Cross-deployment across kinds (local→pod): a LOCAL (host) DRIVER curls a
     # web-server SUBJECT pod via its published port. Exercises a NON-pod peer
     # bring-up (`charly deploy add` the local driver) + `on:`-to-host-venue dispatch +
@@ -282,33 +255,26 @@ check:
             host-driver:
                 target: local
                 local: check-cross-local-driver
-        description:
-            feature: Cross-deployment across kinds — a local host driver HTTP-probes a web subject pod
-            tag: [working]
-        scenario:
-            - name: web-fixture-up
-              step:
-                - id: web-fixture-up
-                  http: http://127.0.0.1:${HOST_PORT:8080}/
-                  status: 200
-                  body:
-                    - contains: charly-fixture-web-content-marker
-                  context:
-                    - runtime
-            - name: local-driver-reaches-web
-              step:
-                # DRIVE: the local (host) driver curls the web pod via its published
-                # port (${PEER_ENDPOINT} → 127.0.0.1:<published 8080>, reachable from
-                # the host), dispatched through the local peer's host venue (on:).
-                - id: local-driver-reaches-web
-                  command: "curl -fsS http://${PEER_ENDPOINT:check-cross-local-http:8080}/"
-                  on: host-driver
-                  eventually: 30s
-                  retry_interval: 3s
-                  stdout:
-                    - contains: charly-fixture-web-content-marker
-                  context:
-                    - runtime
+        description: Cross-deployment across kinds — a local host driver HTTP-probes a web subject pod
+        plan:
+            - check: http=http://127.0.0.1:${HOST_PORT:8080}/
+              id: web-fixture-up
+              http: http://127.0.0.1:${HOST_PORT:8080}/
+              status: 200
+              body:
+                - contains: charly-fixture-web-content-marker
+              context:
+                - runtime
+            - check: command=curl -fsS http://${PEER_ENDPOINT:check-cross-local-http:8080}/
+              id: local-driver-reaches-web
+              command: "curl -fsS http://${PEER_ENDPOINT:check-cross-local-http:8080}/"
+              on: host-driver
+              eventually: 30s
+              retry_interval: 3s
+              stdout:
+                - contains: charly-fixture-web-content-marker
+              context:
+                - runtime
 vm:
     # Disposable Fedora Cloud VM — the substrate for check-fedora-vm, which proves
     # the rpm localpkg AUTO-RESOLVE deploy path (build the opencharly .rpm in a
@@ -398,10 +364,9 @@ local:
     check-cross-local-driver:
         candy:
             - '@github.com/overthinkos/overthink/candy/check-cross-local-driver-layer:v2026.164.1529'
-        description:
-            feature: Host venue for a cross-deployment local DRIVER peer
-            narrative: Minimal kind:local template establishing a host venue an `on:` check drives.
-            tag: [working]
+        description: |-
+            Host venue for a cross-deployment local DRIVER peer
+            Minimal kind:local template establishing a host venue an `on:` check drives.
 discover:
     - path: box
       recursive: true
