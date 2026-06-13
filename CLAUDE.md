@@ -5,7 +5,7 @@ locally (`fedora` → `fedora-nonfree` → `fedora-builder`), the Fedora **GPU b
 family** (`nvidia` / `python-ml`), the consumer showcase images (`fedora-coder` /
 `charly-fedora` / `fedora-test`), the `sway-browser-vnc` desktop, and the ~29
 relocated Fedora-rooted app/fixture boxes (jupyter, jupyter-ml, comfyui, ollama,
-unsloth-studio, immich, immich-ml, openwebui, hermes, web, eval-pod, redis,
+unsloth-studio, immich, immich-ml, openwebui, hermes, web, check-pod, redis,
 tier1/tier23, …) — all discovered under `box/`. It vendors **no candies**: every
 candy is an `@github.com/overthinkos/overthink/candy/<name>:<tag>` ref into main's
 shared candy library, so there is no `candy/` dir here. Every box's base is a bare

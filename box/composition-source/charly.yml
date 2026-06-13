@@ -1,7 +1,7 @@
 box:
     # composition self-test SOURCE — a stable in-main image whose two
-    # image-scope eval probes are consumed (read, filtered, re-run on the
-    # selftest target pods) by the eval.yml `composition-import-selftest`
+    # image-scope check probes are consumed (read, filtered, re-run on the
+    # selftest target pods) by the check.yml `composition-import-selftest`
     # recipe's `from:` expander. Replaces the relocated `fedora-coder`. The
     # keep probe (`composition-source-charly`) tests `charly` presence, which passes on
     # both the `selftest-image` and `composition-app` target pods (both ship the

@@ -5,7 +5,7 @@ box:
         - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.162.1355'
         - '@github.com/overthinkos/overthink/candy/openwebui:v2026.162.1355'
         - '@github.com/overthinkos/overthink/candy/dbus:v2026.162.1355'
-    # No box-level eval: the openwebui-entrypoint binary + the WEBUI_ADMIN_EMAIL
+    # No box-level check: the openwebui-entrypoint binary + the WEBUI_ADMIN_EMAIL
     # env probe live on candy/openwebui (openwebui-entrypoint +
     # openwebui-admin-email-set); the pixi python is proven by the candy's
     # openwebui-service running — one candy check covers every box composing it.

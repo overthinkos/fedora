@@ -17,7 +17,7 @@
 #  this charly.yml). From the parent repo: `charly -C box/fedora box build
 #  fedora-coder`, or anywhere: `charly --repo overthinkos/fedora box build
 #  fedora-coder`.
-version: 2026.164.0002
+version: 2026.164.0004
 # Canonical repo identity — lets the import-namespace loader recognize this repo
 # when main imports it under the `fedora` namespace to build the relocated boxes.
 # The dependency is one-directional: main imports fedora; fedora imports nothing
@@ -35,15 +35,15 @@ defaults:
         max_mb: 128
 # No namespace import: the fedora base stack is local; candies resolve via @github refs.
 import: []
-eval:
-    # Disposable R10 beds (kind: eval, target: pod) — one per fedora consumer
+check:
+    # Disposable R10 beds (kind: check, target: pod) — one per fedora consumer
     # image. Ports remapped into the 4xxxx range so a bed run never collides
-    # with a production deploy of the same image. `charly eval run <bed>` is the
-    # canonical R10 gate: build → eval-image → deploy → eval-live → fresh
+    # with a production deploy of the same image. `charly check run <bed>` is the
+    # canonical R10 gate: build → check-image → deploy → check-live → fresh
     # update → teardown, all on isolated charly-<bed>-* volumes
     # (deployVolumePrefix). `disposable: true` is the sole authorization for
     # the unattended destroy + rebuild.
-    eval-fedora-coder-pod:
+    check-fedora-coder-pod:
         target: pod
         box: fedora-coder
         disposable: true
@@ -51,7 +51,7 @@ eval:
         description:
             feature: R10 bed for the fedora-coder image — sshd + charly-mcp + 5 AI CLIs + DevOps tooling on the Fedora 43 + RPM Fusion base
             tag: [testing]
-    eval-charly-fedora-pod:
+    check-charly-fedora-pod:
         target: pod
         box: charly-fedora
         disposable: true
@@ -59,7 +59,7 @@ eval:
         description:
             feature: R10 bed for the charly-fedora box — minimal charly toolchain + sshd + nvidia on the Fedora base
             tag: [testing]
-    eval-fedora-test-pod:
+    check-fedora-test-pod:
         target: pod
         box: fedora-test
         disposable: true
@@ -67,14 +67,14 @@ eval:
         description:
             feature: R10 bed for the fedora-test image — traefik + testapi on the Fedora base
             tag: [testing]
-    # eval-sway-browser-vnc-pod deploys the SHIPPING sway-browser-vnc image
+    # check-sway-browser-vnc-pod deploys the SHIPPING sway-browser-vnc image
     # (Sway desktop + Chrome + wayvnc) on the Fedora base. The image bakes
     # binaries/services/cdp/vnc/wl/dbus + mcp (chrome-devtools-mcp layer); the
-    # eval: block adds the remaining deploy-scope probes (operator-side http, cdp
+    # check: block adds the remaining deploy-scope probes (operator-side http, cdp
     # list, wl sway-tree, record). Publishes the image's canonical 5900/9222/9224.
     # sway-browser-vnc's canonical home (relocated from the retired
     # overthinkos/selkies submodule; its base is fedora).
-    eval-sway-browser-vnc-pod:
+    check-sway-browser-vnc-pod:
         target: pod
         box: sway-browser-vnc
         disposable: true
@@ -96,19 +96,19 @@ eval:
               step:
                 - record: start
                   id: esbv-pod-record-start
-                  record_name: eval-term
+                  record_name: check-term
                   record_mode: terminal
                   context:
                     - runtime
     # Relocated from main (2026-06 box inversion) with their boxes — bare local
-    # box refs (eval-pod / jupyter / jupyter-ml now live under box/ in this
+    # box refs (check-pod / jupyter / jupyter-ml now live under box/ in this
     # submodule). Per-box R10 beds; the cross-deployment mechanism beds
-    # (eval-cross-*) also live here now (below, before vm:) — their web /
-    # chrome-headless fixtures and the eval-cross-local-driver template are
+    # (check-cross-*) also live here now (below, before vm:) — their web /
+    # chrome-headless fixtures and the check-cross-local-driver template are
     # local to this submodule.
-    eval-pod:
+    check-pod:
         target: pod
-        box: eval-pod
+        box: check-pod
         disposable: true
         lifecycle: dev
         description:
@@ -122,10 +122,10 @@ eval:
                   in_container: false
                   stdout:
                     - contains: '"kind": "pod"'
-                    - contains: eval-pod
+                    - contains: check-pod
                   context:
                     - runtime
-    eval-jupyter-pod:
+    check-jupyter-pod:
         target: pod
         box: jupyter
         disposable: true
@@ -133,7 +133,7 @@ eval:
         description:
             feature: R10 bed for jupyter-mcp regression coverage (auto-attach, canonicalization, idle-room sweep, cell_update id-preservation)
             tag: [working]
-    eval-jupyter-ml-pod:
+    check-jupyter-ml-pod:
         target: pod
         box: jupyter-ml
         disposable: true
@@ -147,7 +147,7 @@ eval:
     # guest — dnf AUTO-RESOLVES the package's mandatory deps from the Fedora repos
     # (incl. tailscale, which IS in the Fedora repos). The witness FAILS if
     # localpkg didn't install the opencharly rpm or dnf didn't auto-resolve the set.
-    eval-fedora-vm:
+    check-fedora-vm:
         target: vm
         vm: fedora-vm
         disposable: true
@@ -181,9 +181,9 @@ eval:
     # this web-server SUBJECT pod over the shared `charly` network. Proves `on:` +
     # ${PEER_HOST:<subject>} + peer: end-to-end — the canonical "a different kind
     # of deployment tests another" case. The chrome peer is brought up ALONGSIDE
-    # the root by bringUpPeers (the shared deploy+eval lifecycle, R3); it is an
-    # instrument, never eval-live'd itself.
-    eval-cross-pod-cdp:
+    # the root by bringUpPeers (the shared deploy+check lifecycle, R3); it is an
+    # instrument, never check-live'd itself.
+    check-cross-pod-cdp:
         target: pod
         box: web
         disposable: true
@@ -213,7 +213,7 @@ eval:
                 - id: cdp-open-web-subject
                   cdp: open
                   on: chrome
-                  url: http://${PEER_HOST:eval-cross-pod-cdp}:8080
+                  url: http://${PEER_HOST:check-cross-pod-cdp}:8080
                   eventually: 45s
                   retry_interval: 3s
                   context:
@@ -234,13 +234,13 @@ eval:
                     - runtime
     # Cross-deployment probing ACROSS KINDS (local→VM): a LOCAL (host) DRIVER
     # curls a web-server SUBJECT running in a VM. The driver reaches the guest's
-    # nginx :80 via ${PEER_ENDPOINT:<bed>:80} → resolveEvalEndpoint's VM branch →
+    # nginx :80 via ${PEER_ENDPOINT:<bed>:80} → resolveCheckEndpoint's VM branch →
     # `ssh -L 127.0.0.1:<rand>:127.0.0.1:80` over the managed charly-web-vm alias —
-    # the SAME host-vantage resolver eval-cross-local-http uses for a pod subject;
+    # the SAME host-vantage resolver check-cross-local-http uses for a pod subject;
     # only the subject KIND differs (VM vs pod), so this is the cross-kind proof
-    # with ZERO VM-specific eval code. A pod driver can't reach a host-vantage
+    # with ZERO VM-specific check code. A pod driver can't reach a host-vantage
     # 127.0.0.1 (its own netns), so the generic, no-hack VM driver runs host-side.
-    eval-cross-vm-http:
+    check-cross-vm-http:
         target: vm
         vm: web-vm
         disposable: true
@@ -248,7 +248,7 @@ eval:
         peer:
             host-driver-vm:
                 target: local
-                local: eval-cross-local-driver
+                local: check-cross-local-driver
         description:
             feature: Cross-deployment across kinds — a local host driver HTTP-probes a web subject in a VM
             tag: [working]
@@ -261,7 +261,7 @@ eval:
                 # listener binds as soon as the VM SSH is up; curl retries via
                 # `eventually:` until cloud-init finishes bringing nginx up.
                 - id: local-driver-reaches-vm
-                  command: "curl -fsS http://${PEER_ENDPOINT:eval-cross-vm-http:80}/"
+                  command: "curl -fsS http://${PEER_ENDPOINT:check-cross-vm-http:80}/"
                   on: host-driver-vm
                   eventually: 90s
                   retry_interval: 5s
@@ -273,7 +273,7 @@ eval:
     # web-server SUBJECT pod via its published port. Exercises a NON-pod peer
     # bring-up (`charly deploy add` the local driver) + `on:`-to-host-venue dispatch +
     # ${PEER_ENDPOINT} (host-vantage addressing of a pod subject).
-    eval-cross-local-http:
+    check-cross-local-http:
         target: pod
         box: web
         disposable: true
@@ -281,7 +281,7 @@ eval:
         peer:
             host-driver:
                 target: local
-                local: eval-cross-local-driver
+                local: check-cross-local-driver
         description:
             feature: Cross-deployment across kinds — a local host driver HTTP-probes a web subject pod
             tag: [working]
@@ -301,7 +301,7 @@ eval:
                 # port (${PEER_ENDPOINT} → 127.0.0.1:<published 8080>, reachable from
                 # the host), dispatched through the local peer's host venue (on:).
                 - id: local-driver-reaches-web
-                  command: "curl -fsS http://${PEER_ENDPOINT:eval-cross-local-http:8080}/"
+                  command: "curl -fsS http://${PEER_ENDPOINT:check-cross-local-http:8080}/"
                   on: host-driver
                   eventually: 30s
                   retry_interval: 3s
@@ -310,7 +310,7 @@ eval:
                   context:
                     - runtime
 vm:
-    # Disposable Fedora Cloud VM — the substrate for eval-fedora-vm, which proves
+    # Disposable Fedora Cloud VM — the substrate for check-fedora-vm, which proves
     # the rpm localpkg AUTO-RESOLVE deploy path (build the opencharly .rpm in a
     # fedora container, dnf install onto the guest, mandatory deps auto-resolved).
     fedora-vm:
@@ -334,9 +334,9 @@ vm:
             package:
                 - sudo
     # Webserver-in-a-VM SUBJECT for the local→VM cross-deployment bed
-    # (eval-cross-vm-http): nginx serves a fixture marker on guest :80. A LOCAL
-    # (host) DRIVER peer reaches it via ${PEER_ENDPOINT:eval-cross-vm-http:80} →
-    # resolveEvalEndpoint's VM branch → `ssh -L 127.0.0.1:<rand>:127.0.0.1:80`
+    # (check-cross-vm-http): nginx serves a fixture marker on guest :80. A LOCAL
+    # (host) DRIVER peer reaches it via ${PEER_ENDPOINT:check-cross-vm-http:80} →
+    # resolveCheckEndpoint's VM branch → `ssh -L 127.0.0.1:<rand>:127.0.0.1:80`
     # over the managed charly-web-vm alias (the SAME host-vantage port resolver the
     # pod beds use; the guest's :80 is reached through the SSH tunnel, never
     # exposed on the host — strictly more secure than a host port-forward).
@@ -391,11 +391,11 @@ pod: {}
 k8s: {}
 local:
     # =================================================================
-    # eval-cross-local-driver — host venue for the eval-cross-local-http bed's
+    # check-cross-local-driver — host venue for the check-cross-local-http bed's
     # local DRIVER peer (cross-deployment, pod→ ... no: LOCAL driver → pod
     # subject). USER-level only (no sudo), so bringUpPeers applies it unattended.
     # =================================================================
-    eval-cross-local-driver:
+    check-cross-local-driver:
         candy:
             - '@github.com/overthinkos/overthink/candy/eval-cross-local-driver-layer:v2026.162.1355'
         description:

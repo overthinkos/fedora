@@ -1,6 +1,6 @@
 box:
     # Headless Chrome CDP driver — the `peer:` instrument that CDP-probes a
-    # separate web subject (cross-deployment `charly eval`). See candy/chrome-headless.
+    # separate web subject (cross-deployment `charly check`). See candy/chrome-headless.
     name: chrome-headless
     base: fedora
     candy:

@@ -5,7 +5,7 @@ box:
         - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.162.1355'
         - '@github.com/overthinkos/overthink/candy/filebrowser:v2026.162.1355'
         - '@github.com/overthinkos/overthink/candy/dbus:v2026.162.1355'
-    # No box-level eval: the filebrowser + dbus-daemon binaries belong to their
+    # No box-level check: the filebrowser + dbus-daemon binaries belong to their
     # candies (filebrowser, dbus), and the `data`-volume probe belongs to
     # candy/filebrowser (which declares the volume) — one candy check covers
     # every box composing them.

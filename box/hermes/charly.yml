@@ -5,7 +5,7 @@ box:
         - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.162.1355'
         - '@github.com/overthinkos/overthink/candy/hermes-full:v2026.162.1355'
         - '@github.com/overthinkos/overthink/candy/dbus:v2026.162.1355'
-    # No box-level eval: the claude/codex/gemini CLIs and the hermes binary +
-    # service belong to their candies' eval (claude-code/codex/gemini via
+    # No box-level check: the claude/codex/gemini CLIs and the hermes binary +
+    # service belong to their candies' check (claude-code/codex/gemini via
     # hermes-full, and hermes' own hermes-binary/hermes-service-running) — one
     # candy check covers every box composing them.

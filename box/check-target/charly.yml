@@ -1,9 +1,9 @@
 box:
-    # Throwaway benchmark target used by `charly eval run eval-target`.
-    # The eval-target layer ships a deliberately-failing BDD scenario
+    # Throwaway benchmark target used by `charly check run check-target`.
+    # The check-target layer ships a deliberately-failing BDD scenario
     # that an AI solves by adding a write: task. Fedora base + minimal
     # layer stack keeps per-iteration rebuild fast.
-    name: eval-target
+    name: check-target
     base: fedora
     candy:
         - '@github.com/overthinkos/overthink/candy/claude-code:v2026.162.1355'

@@ -1,5 +1,5 @@
 box:
-    # charly eval `default` score — per-pod target images.
+    # charly check `default` score — per-pod target images.
     name: os
     base: fedora
     candy:

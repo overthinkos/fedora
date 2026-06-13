@@ -12,7 +12,7 @@ box:
         - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.162.1355'
         - '@github.com/overthinkos/overthink/candy/sway-desktop-vnc:v2026.162.1355'
         - '@github.com/overthinkos/overthink/candy/dbus:v2026.162.1355'
-    # No box-level eval: the full browser-VNC desktop verification (sway/wayvnc/
+    # No box-level check: the full browser-VNC desktop verification (sway/wayvnc/
     # chrome binaries + the running cdp/vnc/wl/dbus/framebuffer probes) belongs
     # to candy/sway-desktop-vnc — the composite candy that assembles the
     # desktop — so one check set covers every box composing it.
