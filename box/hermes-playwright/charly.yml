@@ -2,7 +2,7 @@ box:
     name: hermes-playwright
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.164.1529'
-        - '@github.com/overthinkos/overthink/candy/hermes:v2026.164.1529'
-        - '@github.com/overthinkos/overthink/candy/hermes-playwright:v2026.164.1529'
-        - '@github.com/overthinkos/overthink/candy/dbus:v2026.164.1529'
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.164.2138'
+        - '@github.com/overthinkos/overthink/candy/hermes:v2026.164.2138'
+        - '@github.com/overthinkos/overthink/candy/hermes-playwright:v2026.164.2138'
+        - '@github.com/overthinkos/overthink/candy/dbus:v2026.164.2138'

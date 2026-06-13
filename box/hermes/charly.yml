@@ -2,9 +2,9 @@ box:
     name: hermes
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.164.1529'
-        - '@github.com/overthinkos/overthink/candy/hermes-full:v2026.164.1529'
-        - '@github.com/overthinkos/overthink/candy/dbus:v2026.164.1529'
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.164.2138'
+        - '@github.com/overthinkos/overthink/candy/hermes-full:v2026.164.2138'
+        - '@github.com/overthinkos/overthink/candy/dbus:v2026.164.2138'
     # No box-level check: the claude/codex/gemini CLIs and the hermes binary +
     # service belong to their candies' check (claude-code/codex/gemini via
     # hermes-full, and hermes' own hermes-binary/hermes-service-running) — one

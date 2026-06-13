@@ -2,4 +2,4 @@ box:
     name: tier1
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/check-tier1-layer:v2026.164.1529'
+        - '@github.com/overthinkos/overthink/candy/check-tier1-layer:v2026.164.2138'
