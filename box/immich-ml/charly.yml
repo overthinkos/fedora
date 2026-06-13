@@ -15,16 +15,14 @@ box:
         - '@github.com/overthinkos/overthink/candy/immich:v2026.162.1355'
         - '@github.com/overthinkos/overthink/candy/immich-ml:v2026.162.1355'
         - '@github.com/overthinkos/overthink/candy/dbus:v2026.162.1355'
-    # Only the 4-candy COMPOSITION check belongs on the box (rule 2 — no single
-    # candy owns "postgres + redis + immich-server + immich-ml all RUNNING
-    # together"). The stack binaries (postgres/redis/immich-ml venv/immich
-    # main.js) and the :3003/ping probe belong to their candies (postgresql,
-    # redis, immich-ml, immich).
-    eval:
-        - command: supervisorctl status postgresql redis immich-server immich-ml | awk '{print $2}' | sort -u
-          id: immich-ml-services-running
-          scope: deploy
-          in_container: true
-          exit_status: 0
-          stdout:
-            - RUNNING
+    scenario:
+        - name: immich-ml-services-running
+          step:
+            - command: supervisorctl status postgresql redis immich-server immich-ml | awk '{print $2}' | sort -u
+              id: immich-ml-services-running
+              in_container: true
+              exit_status: 0
+              stdout:
+                - RUNNING
+              context:
+                - runtime
