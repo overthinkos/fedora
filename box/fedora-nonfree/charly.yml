@@ -13,4 +13,4 @@ box:
         npm: fedora-builder
         pixi: fedora-builder
     candy:
-        - '@github.com/overthinkos/overthink/candy/rpmfusion:v2026.162.1355'
+        - '@github.com/overthinkos/overthink/candy/rpmfusion:v2026.164.1529'

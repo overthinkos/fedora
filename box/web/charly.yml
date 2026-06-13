@@ -2,5 +2,5 @@ box:
     name: web
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.162.1355'
-        - '@github.com/overthinkos/overthink/candy/web-layer:v2026.162.1355'
+        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.164.1529'
+        - '@github.com/overthinkos/overthink/candy/web-layer:v2026.164.1529'
