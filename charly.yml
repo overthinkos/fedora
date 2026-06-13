@@ -397,7 +397,7 @@ local:
     # =================================================================
     check-cross-local-driver:
         candy:
-            - '@github.com/overthinkos/overthink/candy/eval-cross-local-driver-layer:v2026.162.1355'
+            - '@github.com/overthinkos/overthink/candy/check-cross-local-driver-layer:v2026.164.1455'
         description:
             feature: Host venue for a cross-deployment local DRIVER peer
             narrative: Minimal kind:local template establishing a host venue an `on:` check drives.

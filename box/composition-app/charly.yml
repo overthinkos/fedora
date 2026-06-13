@@ -5,4 +5,4 @@ box:
     candy:
         - '@github.com/overthinkos/overthink/candy/sshd:v2026.162.1355'
         - '@github.com/overthinkos/overthink/candy/charly:v2026.162.1355'
-        - '@github.com/overthinkos/overthink/candy/eval-composition-layer:v2026.162.1355'
+        - '@github.com/overthinkos/overthink/candy/check-composition-layer:v2026.164.1455'

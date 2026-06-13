@@ -3,4 +3,4 @@ box:
     base: fedora
     candy:
         - '@github.com/overthinkos/overthink/candy/supervisord:v2026.162.1355'
-        - '@github.com/overthinkos/overthink/candy/eval-tier23-layer:v2026.162.1355'
+        - '@github.com/overthinkos/overthink/candy/check-tier23-layer:v2026.164.1455'
