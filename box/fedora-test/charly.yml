@@ -9,6 +9,6 @@ box:
         npm: fedora-builder
         cargo: fedora-builder
     candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.165.0934'
-        - '@github.com/overthinkos/overthink/candy/traefik:v2026.165.0934'
-        - '@github.com/overthinkos/overthink/candy/testapi:v2026.165.0934'
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.165.2208'
+        - '@github.com/overthinkos/overthink/candy/traefik:v2026.165.2208'
+        - '@github.com/overthinkos/overthink/candy/testapi:v2026.165.2208'

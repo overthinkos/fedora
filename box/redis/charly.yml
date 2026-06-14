@@ -2,6 +2,6 @@ box:
     name: redis
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.165.0934'
-        - '@github.com/overthinkos/overthink/candy/redis:v2026.165.0934'
-        - '@github.com/overthinkos/overthink/candy/check-redis-init-layer:v2026.165.0934'
+        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.165.2208'
+        - '@github.com/overthinkos/overthink/candy/redis:v2026.165.2208'
+        - '@github.com/overthinkos/overthink/candy/check-redis-init-layer:v2026.165.2208'
