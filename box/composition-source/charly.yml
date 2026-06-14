@@ -10,7 +10,7 @@ box:
     name: composition-source
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/charly:v2026.164.2138'
+        - '@github.com/overthinkos/overthink/candy/charly:v2026.165.0934'
     plan:
         - check: command=test -x /usr/bin/charly
           command: test -x /usr/bin/charly

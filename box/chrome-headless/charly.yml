@@ -4,5 +4,5 @@ box:
     name: chrome-headless
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.164.2138'
-        - '@github.com/overthinkos/overthink/candy/chrome-headless:v2026.164.2138'
+        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.165.0934'
+        - '@github.com/overthinkos/overthink/candy/chrome-headless:v2026.165.0934'
