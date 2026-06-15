@@ -3,7 +3,7 @@ box:
     name: mcp
     base: fedora
     candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.165.2208'
-        - '@github.com/overthinkos/overthink/candy/jupyter:v2026.165.2208'
-        - '@github.com/overthinkos/overthink/candy/notebook-templates:v2026.165.2208'
-        - '@github.com/overthinkos/overthink/candy/dbus:v2026.165.2208'
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.166.1222'
+        - '@github.com/overthinkos/overthink/candy/jupyter:v2026.166.1222'
+        - '@github.com/overthinkos/overthink/candy/notebook-templates:v2026.166.1222'
+        - '@github.com/overthinkos/overthink/candy/dbus:v2026.166.1222'

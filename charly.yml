@@ -137,7 +137,7 @@ check:
         disposable: true
         lifecycle: dev
         add_candy:
-            - '@github.com/overthinkos/overthink/candy/charly:v2026.165.2208'
+            - '@github.com/overthinkos/overthink/candy/charly:v2026.166.1222'
         install_opts:
             allow_repo_changes: true
             allow_root_tasks: true
@@ -363,7 +363,7 @@ local:
     # =================================================================
     check-cross-local-driver:
         candy:
-            - '@github.com/overthinkos/overthink/candy/check-cross-local-driver-layer:v2026.165.2208'
+            - '@github.com/overthinkos/overthink/candy/check-cross-local-driver-layer:v2026.166.1222'
         description: |-
             Host venue for a cross-deployment local DRIVER peer
             Minimal kind:local template establishing a host venue an `on:` check drives.

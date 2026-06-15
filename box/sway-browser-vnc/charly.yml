@@ -9,9 +9,9 @@ box:
     platform:
         - linux/amd64
     candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.165.2208'
-        - '@github.com/overthinkos/overthink/candy/sway-desktop-vnc:v2026.165.2208'
-        - '@github.com/overthinkos/overthink/candy/dbus:v2026.165.2208'
+        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.166.1222'
+        - '@github.com/overthinkos/overthink/candy/sway-desktop-vnc:v2026.166.1222'
+        - '@github.com/overthinkos/overthink/candy/dbus:v2026.166.1222'
     # No box-level check: the full browser-VNC desktop verification (sway/wayvnc/
     # chrome binaries + the running cdp/vnc/wl/dbus/framebuffer probes) belongs
     # to candy/sway-desktop-vnc — the composite candy that assembles the
