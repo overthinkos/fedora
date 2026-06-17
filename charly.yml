@@ -48,19 +48,19 @@ check:
         box: fedora-coder
         disposable: true
         lifecycle: dev
-        description: R10 bed for the fedora-coder image — sshd + charly-mcp + 5 AI CLIs + DevOps tooling on the Fedora 43 + RPM Fusion base
+        description: Sole proof of the full Fedora developer image (~32 candies — sshd + charly-mcp + 5 AI CLIs + language runtimes + DevOps tooling) building and running as one composed pod on the RPM Fusion base, the largest candy stack of any pod bed. Builds the fedora-coder image on fedora-nonfree (pixi/uv/npm/cargo->fedora-builder multistage), deploys it, and runs the composed candies' file/package/service/command/addr probes plus charly-mcp's mcp ping/list-tools/call.
     check-charly-fedora-pod:
         target: pod
         box: charly-fedora
         disposable: true
         lifecycle: dev
-        description: R10 bed for the charly-fedora box — minimal charly toolchain + sshd + nvidia on the Fedora base
+        description: Sole proof the minimal Fedora charly toolchain image (charly + virtualization/gocryptfs/socat + sshd + container-nesting + nvidia) builds and runs on the bare Fedora base, with charly built from source (no localpkg, unlike check-fedora-vm). Builds the charly-fedora pod on fedora, deploys it, and runs the charly candy's command/file probes (charly version, virsh/qemu/gocryptfs/socat present, charly doctor) plus sshd package/service/addr checks.
     check-fedora-test-pod:
         target: pod
         box: fedora-test
         disposable: true
         lifecycle: dev
-        description: R10 bed for the fedora-test image — traefik + testapi on the Fedora base
+        description: Sole proof of plain HTTP service serving — the traefik reverse-proxy + FastAPI testapi composition on the Fedora base, the only pod bed whose primary feature is plain HTTP. Builds the fedora-test pod on fedora (testapi pixi multistage), deploys it, and runs traefik+testapi baked checks — binary/file presence, service running, http probes on the traefik API port and testapi /health and /.
     # check-sway-browser-vnc-pod deploys the SHIPPING sway-browser-vnc image
     # (Sway desktop + Chrome + wayvnc) on the Fedora base. The image bakes
     # binaries/services/cdp/vnc/wl/dbus + mcp (chrome-devtools-mcp layer); the
@@ -73,6 +73,7 @@ check:
         box: sway-browser-vnc
         disposable: true
         lifecycle: dev
+        description: Sole bed proving the full browser-desktop probe surface — the only deterministic source of cdp + vnc + record + dbus probes together (the richest probe-verb bed) against the Sway+Chrome+wayvnc desktop. Builds the sway-browser-vnc image on fedora, deploys it (5900/9222/9224), and runs sway-desktop-vnc's baked cdp/vnc/wl/dbus probes plus the bed's own cdp list, wl sway-tree, and record start steps.
         plan:
             - check: cdp=list
               cdp: list
@@ -102,7 +103,7 @@ check:
         box: check-pod
         disposable: true
         lifecycle: dev
-        description: Combined fast pod bed — kind:box + kind:candy + kind:pod + DeployTarget mechanisms
+        description: Sole combined fast (~110s) mechanism bed proving four pipeline paths at once — kind:box build, kind:candy composition order, kind:pod runtime, and DeployTarget rendering — the canonical fast R10 gate for box/candy/pod/DeployTarget code changes. Builds a two-layer fedora-minimal:43 image (check-base-layer + check-stack-layer asserting the base marker survived), deploys it, and runs file marker checks, the :18794 port/ss listener check, the check-sleep supervisord service check, plus a host-side charly status --json (status-shows-pod).
         plan:
             - check: command=charly status --json
               id: status-shows-pod
@@ -118,13 +119,13 @@ check:
         box: jupyter
         disposable: true
         lifecycle: dev
-        description: R10 bed for jupyter-mcp regression coverage (auto-attach, canonicalization, idle-room sweep, cell_update id-preservation)
+        description: Sole proof of the plain JupyterLab image + the jupyter_mcp Streamable-HTTP MCP server (notebook/cell tools, regression coverage) on the Fedora base. Builds the jupyter image on fedora (pixi multistage), deploys it (8888), and runs jupyter+jupyter-mcp baked checks — jupyter-lab/spaCy/workspace file checks, supervisord service, http /api, and multiple mcp ping/list-tools/call cell-manipulation round-trips.
     check-jupyter-ml-pod:
         target: pod
         box: jupyter-ml
         disposable: true
         lifecycle: dev
-        description: R10 bed for jupyter-ml — exercises spacy-import, jupyterlab-quarto-enabled build-scope checks plus deploy-scope MCP probes against the GPU-backed image
+        description: Sole proof of the GPU-rooted JupyterLab ML image (spaCy + jupyterlab-quarto + llama.cpp + vLLM + CRDT MCP) building on the Fedora nvidia/CUDA base — the heaviest fedora build. Builds the jupyter-ml pod on the nvidia base (nvidia+cuda candies), deploys it (ordinary pod, no passthrough), and runs spaCy/quarto/llama-cli/vllm build-scope probes plus supervisord service, http /api, and mcp ping/list-tools/call.
     # rpm localpkg AUTO-RESOLVE witness on a disposable Fedora Cloud VM. The charly
     # layer's localpkg: builds the opencharly .rpm from the superproject pkg/fedora
     # (rpmbuild in a fedora container on the host) and `dnf install`s it onto the
@@ -136,6 +137,7 @@ check:
         vm: fedora-vm
         disposable: true
         lifecycle: dev
+        description: Sole proof of the rpm localpkg AUTO-RESOLVE deploy path — the opencharly .rpm built from pkg/fedora installs onto a Fedora Cloud guest and dnf auto-resolves its mandatory deps. Disposable Fedora Cloud 43 libvirt VM, overlays the add_candy charly layer whose localpkg builds and dnf-installs the opencharly rpm, then asserts rpm -q opencharly/podman/libvirt/tailscale/gocryptfs + charly version (LOCALPKG-RPM-AUTORESOLVE-OK).
         add_candy:
             - '@github.com/overthinkos/overthink/candy/charly:v2026.166.1222'
         install_opts:
@@ -183,7 +185,13 @@ check:
             chrome:
                 target: pod
                 box: chrome-headless
-        description: Cross-deployment CDP — a Chrome driver pod probes a separate web subject pod
+        description: >-
+            Sole proof of pod->pod cross-deployment CDP probing — a Chrome DRIVER
+            pod CDP-renders a separate web SUBJECT pod over the shared charly net
+            (on: + ${PEER_HOST} + peer:). Builds/deploys the web subject pod (nginx
+            :8080) + a chrome-headless peer driver, http-checks the subject marker,
+            then uses cdp open / cdp text on: chrome against
+            ${PEER_HOST:check-cross-pod-cdp}:8080 to assert the rendered fixture marker.
         plan:
             - check: http=http://127.0.0.1:${HOST_PORT:8080}/
               id: web-fixture-up
@@ -230,7 +238,14 @@ check:
             host-driver-vm:
                 target: local
                 local: check-cross-local-driver
-        description: Cross-deployment across kinds — a local host driver HTTP-probes a web subject in a VM
+        description: >-
+            Sole proof of cross-KIND local->VM cross-deployment probing — a host
+            local DRIVER reaches a web SUBJECT inside a VM via ${PEER_ENDPOINT}'s
+            ssh -L forward (resolveCheckEndpoint VM branch), zero VM-specific check
+            code. Disposable Fedora Cloud libvirt VM running cloud-init nginx on
+            guest :80, a local host-driver peer, then a curl command on:
+            host-driver-vm against ${PEER_ENDPOINT:check-cross-vm-http:80} (ssh -L
+            tunnel over the managed charly-web-vm alias) asserting the vm fixture marker.
         plan:
             - check: command=curl -fsS http://${PEER_ENDPOINT:check-cross-vm-http:80}/
               id: local-driver-reaches-vm
@@ -255,7 +270,14 @@ check:
             host-driver:
                 target: local
                 local: check-cross-local-driver
-        description: Cross-deployment across kinds — a local host driver HTTP-probes a web subject pod
+        description: >-
+            Sole proof of cross-KIND local->pod cross-deployment probing — a non-pod
+            local DRIVER peer reaches a web SUBJECT pod via its published port
+            (resolveCheckEndpoint pod branch), the pod-subject twin of
+            check-cross-vm-http. Builds/deploys the web subject pod (nginx :8080) + a
+            kind:local host-driver peer, http-checks the subject marker directly, then
+            a curl command on: host-driver against
+            ${PEER_ENDPOINT:check-cross-local-http:8080} asserting the fixture marker.
         plan:
             - check: http=http://127.0.0.1:${HOST_PORT:8080}/
               id: web-fixture-up
