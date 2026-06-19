@@ -3,4 +3,4 @@ selftest-image:
         base: fedora
     selftest-image-candy:
         candy:
-            - '@github.com/overthinkos/overthink/candy/charly:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/charly:v2026.170.1105'

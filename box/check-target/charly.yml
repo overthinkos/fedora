@@ -3,6 +3,6 @@ check-target:
         base: fedora
     check-target-candy:
         candy:
-            - '@github.com/overthinkos/overthink/candy/claude-code:v2026.166.1222'
-            - '@github.com/overthinkos/overthink/candy/charly-mcp:v2026.166.1222'
-            - '@github.com/overthinkos/overthink/candy/check-target-layer:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/claude-code:v2026.170.1105'
+            - '@github.com/overthinkos/overthink/candy/charly-mcp:v2026.170.1105'
+            - '@github.com/overthinkos/overthink/candy/check-target-layer:v2026.170.1105'

@@ -3,7 +3,7 @@ composition-source:
         base: fedora
     composition-source-candy:
         candy:
-            - '@github.com/overthinkos/overthink/candy/charly:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/charly:v2026.170.1105'
     composition-source-charly:
         check: command=test -x /usr/bin/charly
         command: test -x /usr/bin/charly

@@ -11,5 +11,5 @@ check-pod:
             - fedora
     check-pod-candy:
         candy:
-            - '@github.com/overthinkos/overthink/candy/check-base-layer:v2026.166.1222'
-            - '@github.com/overthinkos/overthink/candy/check-stack-layer:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/check-base-layer:v2026.170.1105'
+            - '@github.com/overthinkos/overthink/candy/check-stack-layer:v2026.170.1105'

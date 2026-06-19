@@ -3,10 +3,10 @@ jupyter:
         base: fedora
     jupyter-candy:
         candy:
-            - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.166.1222'
-            - '@github.com/overthinkos/overthink/candy/jupyter:v2026.166.1222'
-            - '@github.com/overthinkos/overthink/candy/notebook-templates:v2026.166.1222'
-            - '@github.com/overthinkos/overthink/candy/dbus:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.170.1105'
+            - '@github.com/overthinkos/overthink/candy/jupyter:v2026.170.1105'
+            - '@github.com/overthinkos/overthink/candy/notebook-templates:v2026.170.1105'
+            - '@github.com/overthinkos/overthink/candy/dbus:v2026.170.1105'
         # No box-level check: the .ipynb-templates-provisioned probe lives on
         # candy/notebook-templates (notebook-templates-present, covering all 5 boxes
         # composing it), and the jupyter_mcp extension is covered by candy/jupyter-mcp

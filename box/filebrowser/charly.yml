@@ -3,9 +3,9 @@ filebrowser:
         base: fedora
     filebrowser-candy:
         candy:
-            - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.166.1222'
-            - '@github.com/overthinkos/overthink/candy/filebrowser:v2026.166.1222'
-            - '@github.com/overthinkos/overthink/candy/dbus:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.170.1105'
+            - '@github.com/overthinkos/overthink/candy/filebrowser:v2026.170.1105'
+            - '@github.com/overthinkos/overthink/candy/dbus:v2026.170.1105'
         # No box-level check: the filebrowser + dbus-daemon binaries belong to their
         # candies (filebrowser, dbus), and the `data`-volume probe belongs to
         # candy/filebrowser (which declares the volume) — one candy check covers

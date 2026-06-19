@@ -141,7 +141,7 @@ check-fedora-vm:
         description: Sole proof of the rpm localpkg AUTO-RESOLVE deploy path — the opencharly .rpm built from pkg/fedora installs onto a Fedora Cloud guest and dnf auto-resolves its mandatory deps. Disposable Fedora Cloud 43 libvirt VM, overlays the add_candy charly layer whose localpkg builds and dnf-installs the opencharly rpm, then asserts rpm -q opencharly/podman/libvirt/tailscale/gocryptfs + charly version (LOCALPKG-RPM-AUTORESOLVE-OK).
     check-fedora-vm-add_candy:
         add_candy:
-            - '@github.com/overthinkos/overthink/candy/charly:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/charly:v2026.170.1105'
     check-fedora-vm-install_opts:
         install_opts:
             allow_repo_changes: true
@@ -377,7 +377,7 @@ check-cross-local-driver:
             Minimal kind:local template establishing a host venue a sibling check drives by tree position.
     check-cross-local-driver-candy:
         candy:
-            - '@github.com/overthinkos/overthink/candy/check-cross-local-driver-layer:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/check-cross-local-driver-layer:v2026.170.1105'
 discover:
     - path: box
       recursive: true

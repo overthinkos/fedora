@@ -15,6 +15,6 @@ fedora-builder:
             - cargo
     fedora-builder-candy:
         candy:
-            - '@github.com/overthinkos/overthink/candy/pixi:v2026.166.1222'
-            - '@github.com/overthinkos/overthink/candy/nodejs:v2026.166.1222'
-            - '@github.com/overthinkos/overthink/candy/build-toolchain:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/pixi:v2026.170.1105'
+            - '@github.com/overthinkos/overthink/candy/nodejs:v2026.170.1105'
+            - '@github.com/overthinkos/overthink/candy/build-toolchain:v2026.170.1105'
