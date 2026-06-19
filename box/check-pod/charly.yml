@@ -1,23 +1,15 @@
-box:
-    # =================================================================
-    # check-pod — combined fast R10 mechanism fixture (fedora-minimal:43).
-    # Two layers cover four pipeline mechanisms in one disposable bed:
-    # kind:box build (markers), kind:candy composition order
-    # (check-stack-layer asserts check-base-layer's marker survived),
-    # kind:pod runtime (nc on :18794 + supervisord), and DeployTarget
-    # rendering (supervisord sleep service). Together with the check-local
-    # kind:local template it smoke-tests every container-side kind path
-    # end-to-end via `charly check run check-pod`.
-    # =================================================================
-    name: check-pod
-    base: quay.io/fedora/fedora-minimal:43
-    distro:
-        - fedora:43
-        - fedora
-    produce: []
-    description: |-
-        Combined fast check fixture — image/layer/pod/DeployTarget mechanism smoke
-        Two-layer fedora-minimal image backing the check-pod kind:check bed (`charly check run check-pod`) — covers kind:box build, kind:candy composition order, kind:pod runtime (nc :18794 + supervisord), and DeployTarget rendering (supervisord sleep).
-    candy:
-        - '@github.com/overthinkos/overthink/candy/check-base-layer:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/check-stack-layer:v2026.166.1222'
+check-pod:
+    box:
+        base: quay.io/fedora/fedora-minimal:43
+        produce: []
+        description: |-
+            Combined fast check fixture — image/layer/pod/DeployTarget mechanism smoke
+            Two-layer fedora-minimal image backing the check-pod kind:check bed (`charly check run check-pod`) — covers kind:box build, kind:candy composition order, kind:pod runtime (nc :18794 + supervisord), and DeployTarget rendering (supervisord sleep).
+    check-pod-distro:
+        distro:
+            - fedora:43
+            - fedora
+    check-pod-candy:
+        candy:
+            - '@github.com/overthinkos/overthink/candy/check-base-layer:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/check-stack-layer:v2026.166.1222'

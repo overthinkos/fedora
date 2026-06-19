@@ -1,7 +1,8 @@
-box:
-    name: valkey-test
-    base: fedora
-    candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/valkey:v2026.166.1222'
+valkey-test:
+    box:
+        base: fedora
+    valkey-test-candy:
+        candy:
+            - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/supervisord:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/valkey:v2026.166.1222'

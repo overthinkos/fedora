@@ -1,15 +1,16 @@
-box:
-    name: fedora
-    version: 2026.144.1443
-    base: quay.io/fedora/fedora:43
-    distro:
-        - fedora:43
-        - fedora
-    builder:
-        cargo: fedora-builder
-        npm: fedora-builder
-        pixi: fedora-builder
-    produce:
-        - pixi
-        - npm
-        - cargo
+fedora:
+    box:
+        version: 2026.144.1443
+        base: quay.io/fedora/fedora:43
+        builder:
+            cargo: fedora-builder
+            npm: fedora-builder
+            pixi: fedora-builder
+        produce:
+            - pixi
+            - npm
+            - cargo
+    fedora-distro:
+        distro:
+            - fedora:43
+            - fedora

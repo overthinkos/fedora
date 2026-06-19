@@ -1,16 +1,17 @@
-box:
-    name: python-ml
-    # GPU-accelerated Python ML environment (PyTorch / transformers / vLLM /
-    # llama.cpp) on the local nvidia base (a heavy GPU image). The python-ml
-    # layer owns the pixi.toml, so an explicit builder map is required (builder
-    # maps do not cross the `charly` namespace boundary).
-    base: nvidia
-    builder:
-        pixi: fedora-builder
-        npm: fedora-builder
-        cargo: fedora-builder
-    platform:
-        - linux/amd64
-    candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/python-ml:v2026.166.1222'
+python-ml:
+    box:
+        # GPU-accelerated Python ML environment (PyTorch / transformers / vLLM /
+        # llama.cpp) on the local nvidia base (a heavy GPU image). The python-ml
+        # layer owns the pixi.toml, so an explicit builder map is required (builder
+        # maps do not cross the `charly` namespace boundary).
+        base: nvidia
+        builder:
+            pixi: fedora-builder
+            npm: fedora-builder
+            cargo: fedora-builder
+        platform:
+            - linux/amd64
+    python-ml-candy:
+        candy:
+            - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/python-ml:v2026.166.1222'

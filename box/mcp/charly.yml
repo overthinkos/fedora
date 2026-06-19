@@ -1,9 +1,9 @@
-box:
-    # mcp-protocol-probe: full Jupyter image (deploys as `mcp`).
-    name: mcp
-    base: fedora
-    candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/jupyter:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/notebook-templates:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/dbus:v2026.166.1222'
+mcp:
+    box:
+        base: fedora
+    mcp-candy:
+        candy:
+            - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/jupyter:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/notebook-templates:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/dbus:v2026.166.1222'

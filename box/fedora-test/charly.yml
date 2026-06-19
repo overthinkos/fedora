@@ -1,14 +1,15 @@
-box:
-    name: fedora-test
-    base: fedora
-    # Builder maps do NOT cross the `charly` namespace boundary; testapi carries
-    # a pixi.toml, so route pixi (plus the standard npm/cargo) to main's
-    # fedora-builder under the `charly` namespace.
-    builder:
-        pixi: fedora-builder
-        npm: fedora-builder
-        cargo: fedora-builder
-    candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/traefik:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/testapi:v2026.166.1222'
+fedora-test:
+    box:
+        base: fedora
+        # Builder maps do NOT cross the `charly` namespace boundary; testapi carries
+        # a pixi.toml, so route pixi (plus the standard npm/cargo) to main's
+        # fedora-builder under the `charly` namespace.
+        builder:
+            pixi: fedora-builder
+            npm: fedora-builder
+            cargo: fedora-builder
+    fedora-test-candy:
+        candy:
+            - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/traefik:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/testapi:v2026.166.1222'

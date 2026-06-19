@@ -1,27 +1,28 @@
-box:
-    name: immich-ml
-    base: fedora
-    platform:
-        - linux/amd64
-    candy:
-        - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/nodejs:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/cuda:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/python-ml:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/postgresql:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/vectorchord:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/redis:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/immich:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/immich-ml:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/dbus:v2026.166.1222'
-    plan:
-        - check: command=supervisorctl status postgresql redis immich-server immich-ml | awk '{print $2}' | sort -u
-          command: supervisorctl status postgresql redis immich-server immich-ml | awk '{print $2}' | sort -u
-          id: immich-ml-services-running
-          in_container: true
-          exit_status: 0
-          stdout:
+immich-ml:
+    box:
+        base: fedora
+        platform:
+            - linux/amd64
+    immich-ml-candy:
+        candy:
+            - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/nodejs:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/cuda:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/python-ml:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/supervisord:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/postgresql:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/vectorchord:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/redis:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/immich:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/immich-ml:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/dbus:v2026.166.1222'
+    immich-ml-services-running:
+        check: command=supervisorctl status postgresql redis immich-server immich-ml | awk '{print $2}' | sort -u
+        command: supervisorctl status postgresql redis immich-server immich-ml | awk '{print $2}' | sort -u
+        id: immich-ml-services-running
+        in_container: true
+        exit_status: 0
+        stdout:
             - RUNNING
-          context:
+        context:
             - runtime

@@ -1,11 +1,8 @@
-box:
-    # Throwaway benchmark target used by `charly check run check-target`.
-    # The check-target layer ships a deliberately-failing BDD scenario
-    # that an AI solves by adding a write: task. Fedora base + minimal
-    # layer stack keeps per-iteration rebuild fast.
-    name: check-target
-    base: fedora
-    candy:
-        - '@github.com/overthinkos/overthink/candy/claude-code:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/charly-mcp:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/check-target-layer:v2026.166.1222'
+check-target:
+    box:
+        base: fedora
+    check-target-candy:
+        candy:
+            - '@github.com/overthinkos/overthink/candy/claude-code:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/charly-mcp:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/check-target-layer:v2026.166.1222'

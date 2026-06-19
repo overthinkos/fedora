@@ -1,7 +1,7 @@
-box:
-    # tier4-redis: client pod with redis-cli only (deploys as `redis-client`).
-    name: redis-client
-    base: fedora
-    candy:
-        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/redis-client-layer:v2026.166.1222'
+redis-client:
+    box:
+        base: fedora
+    redis-client-candy:
+        candy:
+            - '@github.com/overthinkos/overthink/candy/supervisord:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/redis-client-layer:v2026.166.1222'

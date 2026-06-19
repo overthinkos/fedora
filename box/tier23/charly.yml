@@ -1,6 +1,7 @@
-box:
-    name: tier23
-    base: fedora
-    candy:
-        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/check-tier23-layer:v2026.166.1222'
+tier23:
+    box:
+        base: fedora
+    tier23-candy:
+        candy:
+            - '@github.com/overthinkos/overthink/candy/supervisord:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/check-tier23-layer:v2026.166.1222'

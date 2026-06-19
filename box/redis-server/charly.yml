@@ -1,7 +1,7 @@
-box:
-    # tier4-redis: server bound to 0.0.0.0 for cross-pod access (deploys as `redis`).
-    name: redis-server
-    base: fedora
-    candy:
-        - '@github.com/overthinkos/overthink/candy/supervisord:v2026.166.1222'
-        - '@github.com/overthinkos/overthink/candy/redis-server-layer:v2026.166.1222'
+redis-server:
+    box:
+        base: fedora
+    redis-server-candy:
+        candy:
+            - '@github.com/overthinkos/overthink/candy/supervisord:v2026.166.1222'
+            - '@github.com/overthinkos/overthink/candy/redis-server-layer:v2026.166.1222'

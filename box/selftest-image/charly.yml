@@ -1,6 +1,6 @@
-box:
-    # phase5 selftest: minimal charly-only image for selftest-image pod.
-    name: selftest-image
-    base: fedora
-    candy:
-        - '@github.com/overthinkos/overthink/candy/charly:v2026.166.1222'
+selftest-image:
+    box:
+        base: fedora
+    selftest-image-candy:
+        candy:
+            - '@github.com/overthinkos/overthink/candy/charly:v2026.166.1222'
