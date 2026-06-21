@@ -1,5 +1,5 @@
 fedora-nonfree:
-    box:
+    candy:
         base: fedora
         # Explicit builder map: fedora-nonfree is a base consumers compile on
         # (e.g. fedora-coder), and builder maps do NOT propagate transitively

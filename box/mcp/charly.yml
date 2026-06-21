@@ -1,5 +1,5 @@
 mcp:
-    box:
+    candy:
         base: fedora
     mcp-candy:
         candy:

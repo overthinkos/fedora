@@ -1,5 +1,5 @@
 jupyter-ml:
-    box:
+    candy:
         enabled: true
         base: nvidia
         platform:

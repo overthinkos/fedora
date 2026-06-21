@@ -1,5 +1,5 @@
 selftest-image:
-    box:
+    candy:
         base: fedora
     selftest-image-candy:
         candy:

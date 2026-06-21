@@ -1,5 +1,5 @@
 redis-server:
-    box:
+    candy:
         base: fedora
     redis-server-candy:
         candy:

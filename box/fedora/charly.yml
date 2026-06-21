@@ -1,5 +1,5 @@
 fedora:
-    box:
+    candy:
         version: 2026.144.1443
         base: quay.io/fedora/fedora:43
         builder:

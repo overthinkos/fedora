@@ -1,5 +1,5 @@
 nvidia:
-    box:
+    candy:
         # GPU base: Fedora + RPM Fusion (fedora-nonfree) + the GPU runtime
         # (nvidia layer: driver libs + nvidia-container-toolkit/CDI) + the CUDA
         # toolkit (cuda layer: nvcc/cuDNN/onnxruntime). No builder map: none of

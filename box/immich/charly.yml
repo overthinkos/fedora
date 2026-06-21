@@ -1,5 +1,5 @@
 immich:
-    box:
+    candy:
         base: fedora-nonfree
         platform:
             - linux/amd64

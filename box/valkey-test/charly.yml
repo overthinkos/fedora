@@ -1,5 +1,5 @@
 valkey-test:
-    box:
+    candy:
         base: fedora
     valkey-test-candy:
         candy:

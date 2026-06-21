@@ -1,5 +1,5 @@
 tier1:
-    box:
+    candy:
         base: fedora
     tier1-candy:
         candy:

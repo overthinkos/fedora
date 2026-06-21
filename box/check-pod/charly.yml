@@ -1,5 +1,5 @@
 check-pod:
-    box:
+    candy:
         base: quay.io/fedora/fedora-minimal:43
         produce: []
         description: |-

@@ -1,5 +1,5 @@
 python-ml:
-    box:
+    candy:
         # GPU-accelerated Python ML environment (PyTorch / transformers / vLLM /
         # llama.cpp) on the local nvidia base (a heavy GPU image). The python-ml
         # layer owns the pixi.toml, so an explicit builder map is required (builder

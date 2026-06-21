@@ -1,5 +1,5 @@
 check-target:
-    box:
+    candy:
         base: fedora
     check-target-candy:
         candy:

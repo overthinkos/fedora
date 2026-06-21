@@ -1,5 +1,5 @@
 fedora-builder:
-    box:
+    candy:
         # base: fedora-nonfree (NOT plain fedora) so the RPM Fusion repos land in
         # the BASE chain — guaranteeing they are enabled before build-toolchain's
         # dnf install of the nonfree codec devel libs (ffmpeg-devel / x264-devel /

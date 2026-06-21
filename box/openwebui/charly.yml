@@ -1,5 +1,5 @@
 openwebui:
-    box:
+    candy:
         base: fedora
     openwebui-candy:
         candy:

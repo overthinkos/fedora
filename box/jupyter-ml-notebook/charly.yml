@@ -1,5 +1,5 @@
 jupyter-ml-notebook:
-    box:
+    candy:
         base: nvidia
         platform:
             - linux/amd64

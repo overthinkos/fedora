@@ -1,5 +1,5 @@
 fedora-coder:
-    box:
+    candy:
         base: fedora-nonfree
         # Builder maps do NOT cross the `charly` namespace boundary; route the
         # formats this image builds (pixi via pixi/uv, npm via nodejs, cargo

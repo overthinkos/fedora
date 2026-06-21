@@ -1,5 +1,5 @@
 fedora-test:
-    box:
+    candy:
         base: fedora
         # Builder maps do NOT cross the `charly` namespace boundary; testapi carries
         # a pixi.toml, so route pixi (plus the standard npm/cargo) to main's

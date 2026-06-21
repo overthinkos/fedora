@@ -1,5 +1,5 @@
 hermes-playwright:
-    box:
+    candy:
         base: fedora
     hermes-playwright-candy:
         candy:

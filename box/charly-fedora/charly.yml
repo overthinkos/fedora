@@ -1,5 +1,5 @@
 charly-fedora:
-    box:
+    candy:
         base: fedora
         # Builder maps do NOT cross the `charly` namespace boundary; route the
         # standard build formats to main's fedora-builder under the `charly`

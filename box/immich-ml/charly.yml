@@ -1,5 +1,5 @@
 immich-ml:
-    box:
+    candy:
         base: fedora
         platform:
             - linux/amd64

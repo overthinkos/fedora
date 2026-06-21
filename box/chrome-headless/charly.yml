@@ -1,5 +1,5 @@
 chrome-headless:
-    box:
+    candy:
         base: fedora
     chrome-headless-candy:
         candy:

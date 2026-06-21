@@ -1,5 +1,5 @@
 composition-app:
-    box:
+    candy:
         base: fedora
     composition-app-candy:
         candy:
