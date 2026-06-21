@@ -13,3 +13,11 @@ check-pod:
         candy:
             - '@github.com/overthinkos/overthink/candy/check-base-layer:v2026.170.1105'
             - '@github.com/overthinkos/overthink/candy/check-stack-layer:v2026.170.1105'
+    exampleprobe-baked:
+        check: the exampleprobe plugin verb dispatches through the provider registry and passes (proves the unified-provider + generic plugin-verb foundation, baked into the check-pod image)
+        id: exampleprobe-baked
+        plugin: exampleprobe
+        plugin_input:
+            marker: check-pod-plugin-ok
+        context:
+            - runtime
