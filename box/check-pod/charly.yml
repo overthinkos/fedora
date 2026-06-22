@@ -31,3 +31,11 @@ check-pod:
         plugin_input: {matching: "opencharly", contains: {contains: "charly"}}
         context:
             - runtime
+    check-runverb-plugin:
+        check: the examplerunverb plugin verb dispatches IN-PROCESS via RunVerb keeping the live *Runner and passes (proves an execution-needing verb can be a built-in plugin unit, baked into the check-pod image)
+        id: check-runverb-plugin
+        plugin: examplerunverb
+        plugin_input:
+            marker: runverb-ok
+        context:
+            - runtime
