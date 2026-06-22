@@ -24,3 +24,10 @@ check-pod:
             marker: check-pod-plugin-ok
         context:
             - runtime
+    check-matching-plugin:
+        check: the matching plugin verb dispatches through the provider registry and passes (the matching verb is now a dedicated built-in plugin unit, baked into the check-pod image)
+        id: check-matching-plugin
+        plugin: matching
+        plugin_input: {matching: "opencharly", contains: {contains: "charly"}}
+        context:
+            - runtime
