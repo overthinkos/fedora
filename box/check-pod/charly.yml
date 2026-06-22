@@ -46,3 +46,10 @@ check-pod:
         plugin_input: {dns: "localhost", resolvable: true}
         context:
             - runtime
+    check-interface-plugin:
+        check: the interface plugin verb finds the loopback interface (the interface check verb is now a dedicated built-in plugin unit; corpus-unused so exercised here, baked into the check-pod image)
+        id: check-interface-plugin
+        plugin: interface
+        plugin_input: {interface: "lo"}
+        context:
+            - runtime

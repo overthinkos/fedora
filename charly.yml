@@ -17,7 +17,7 @@
 #  this charly.yml). From the parent repo: `charly -C box/fedora box build
 #  fedora-coder`, or anywhere: `charly --repo overthinkos/fedora box build
 #  fedora-coder`.
-version: 2026.173.1742
+version: 2026.173.2300
 # Canonical repo identity — lets the import-namespace loader recognize this repo
 # when main imports it under the `fedora` namespace to build the relocated boxes.
 # The dependency is one-directional: main imports fedora; fedora imports nothing
@@ -191,12 +191,14 @@ check-cross-pod-cdp:
         web-fixture-up:
             check: http=http://127.0.0.1:${HOST_PORT:8080}/
             id: web-fixture-up
-            http: http://127.0.0.1:${HOST_PORT:8080}/
-            status: 200
-            body:
-                - contains: charly-fixture-web-content-marker
             context:
                 - runtime
+            plugin: http
+            plugin_input:
+                http: http://127.0.0.1:${HOST_PORT:8080}/
+                status: 200
+                body:
+                    - contains: charly-fixture-web-content-marker
     chrome:
         pod:
             image: chrome-headless
@@ -266,12 +268,14 @@ check-cross-local-http:
         web-fixture-up:
             check: http=http://127.0.0.1:${HOST_PORT:8080}/
             id: web-fixture-up
-            http: http://127.0.0.1:${HOST_PORT:8080}/
-            status: 200
-            body:
-                - contains: charly-fixture-web-content-marker
             context:
                 - runtime
+            plugin: http
+            plugin_input:
+                http: http://127.0.0.1:${HOST_PORT:8080}/
+                status: 200
+                body:
+                    - contains: charly-fixture-web-content-marker
     host-driver:
         local:
             from: check-cross-local-driver
