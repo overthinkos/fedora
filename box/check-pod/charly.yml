@@ -39,3 +39,10 @@ check-pod:
             marker: runverb-ok
         context:
             - runtime
+    check-dns-plugin:
+        check: the dns plugin verb resolves localhost (the dns check verb is now a dedicated built-in plugin unit; corpus-unused so exercised here, baked into the check-pod image)
+        id: check-dns-plugin
+        plugin: dns
+        plugin_input: {dns: "localhost", resolvable: true}
+        context:
+            - runtime
