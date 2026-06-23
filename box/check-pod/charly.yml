@@ -65,3 +65,35 @@ check-pod:
         plugin_input: {unix_group: "checkgrp"}
         context:
             - runtime
+    check-user-present:
+        # The CHECK half of the dual-natured `user` state-provision plugin verb (getent
+        # passwd). root always exists in the pod, so it is the corpus-unused exercise that
+        # proves the user check verb dispatches through the provider registry at runtime.
+        check: the user check verb finds root via getent passwd (the user check verb is now a dedicated builtin state-provision plugin unit; corpus-unused so exercised here, baked into the check-pod image)
+        id: check-user-present
+        plugin: user
+        plugin_input: {user: "root"}
+        context:
+            - runtime
+    check-mount-present:
+        # The CHECK half of the dual-natured `mount` state-provision plugin verb (findmnt).
+        # /proc is always mounted in the pod, so it is the corpus-unused exercise that proves
+        # the mount check verb dispatches through the provider registry at runtime.
+        check: the mount check verb finds the /proc mount via findmnt (the mount check verb is now a dedicated builtin state-provision plugin unit; corpus-unused so exercised here, baked into the check-pod image)
+        id: check-mount-present
+        plugin: mount
+        plugin_input: {mount: "/proc"}
+        context:
+            - runtime
+    check-kernel-param-readable:
+        # The CHECK half of the dual-natured `kernel-param` state-provision plugin verb. It
+        # reads /proc/sys/kernel/ostype directly (equivalent to `sysctl -n kernel.ostype` but
+        # needing no procps-ng, which fedora-minimal omits). kernel.ostype is always "Linux"
+        # (deterministic), so it is the corpus-unused exercise that proves the kernel-param
+        # check verb dispatches through the provider registry at runtime, value matcher and all.
+        check: the kernel-param check verb reads kernel.ostype = Linux from /proc/sys (the kernel-param check verb is now a dedicated builtin state-provision plugin unit; corpus-unused so exercised here, baked into the check-pod image)
+        id: check-kernel-param-readable
+        plugin: kernel-param
+        plugin_input: {kernel-param: "kernel.ostype", value: "Linux"}
+        context:
+            - runtime
