@@ -3,5 +3,5 @@ redis-client:
         base: fedora
     redis-client-candy:
         candy:
-            - '@github.com/overthinkos/overthink/candy/supervisord:v2026.170.1105'
-            - '@github.com/overthinkos/overthink/candy/redis-client-layer:v2026.170.1105'
+            - '@github.com/overthinkos/overthink/candy/supervisord:v2026.174.0425'
+            - '@github.com/overthinkos/overthink/candy/redis-client-layer:v2026.174.0425'

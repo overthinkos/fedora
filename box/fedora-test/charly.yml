@@ -10,6 +10,6 @@ fedora-test:
             cargo: fedora-builder
     fedora-test-candy:
         candy:
-            - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.170.1105'
-            - '@github.com/overthinkos/overthink/candy/traefik:v2026.170.1105'
-            - '@github.com/overthinkos/overthink/candy/testapi:v2026.170.1105'
+            - '@github.com/overthinkos/overthink/candy/agent-forwarding:v2026.174.0425'
+            - '@github.com/overthinkos/overthink/candy/traefik:v2026.174.0425'
+            - '@github.com/overthinkos/overthink/candy/testapi:v2026.174.0425'

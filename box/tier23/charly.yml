@@ -3,5 +3,5 @@ tier23:
         base: fedora
     tier23-candy:
         candy:
-            - '@github.com/overthinkos/overthink/candy/supervisord:v2026.170.1105'
-            - '@github.com/overthinkos/overthink/candy/check-tier23-layer:v2026.170.1105'
+            - '@github.com/overthinkos/overthink/candy/supervisord:v2026.174.0425'
+            - '@github.com/overthinkos/overthink/candy/check-tier23-layer:v2026.174.0425'

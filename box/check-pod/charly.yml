@@ -11,11 +11,11 @@ check-pod:
             - fedora
     check-pod-candy:
         candy:
-            - '@github.com/overthinkos/overthink/candy/check-base-layer:v2026.170.1105'
-            - '@github.com/overthinkos/overthink/candy/check-stack-layer:v2026.170.1105'
+            - '@github.com/overthinkos/overthink/candy/check-base-layer:v2026.174.0425'
+            - '@github.com/overthinkos/overthink/candy/check-stack-layer:v2026.174.0425'
             # The OUT-OF-TREE plugin candy: its baked `externalprobe` check rides in,
             # and at check-live charly's loader host-builds + connects it out-of-proc.
-            - '@github.com/overthinkos/overthink/candy/plugin-example-external:v2026.172.1012'
+            - '@github.com/overthinkos/overthink/candy/plugin-example-external:v2026.174.0425'
     exampleprobe-baked:
         check: the exampleprobe plugin verb dispatches through the provider registry and passes (proves the unified-provider + generic plugin-verb foundation, baked into the check-pod image)
         id: exampleprobe-baked

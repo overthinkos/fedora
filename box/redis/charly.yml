@@ -3,6 +3,6 @@ redis:
         base: fedora
     redis-candy:
         candy:
-            - '@github.com/overthinkos/overthink/candy/supervisord:v2026.170.1105'
-            - '@github.com/overthinkos/overthink/candy/redis:v2026.170.1105'
-            - '@github.com/overthinkos/overthink/candy/check-redis-init-layer:v2026.170.1105'
+            - '@github.com/overthinkos/overthink/candy/supervisord:v2026.174.0425'
+            - '@github.com/overthinkos/overthink/candy/redis:v2026.174.0425'
+            - '@github.com/overthinkos/overthink/candy/check-redis-init-layer:v2026.174.0425'
