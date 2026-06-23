@@ -6,11 +6,15 @@ composition-source:
             - '@github.com/overthinkos/overthink/candy/charly:v2026.170.1105'
     composition-source-charly:
         check: command=test -x /usr/bin/charly
-        command: test -x /usr/bin/charly
         id: composition-source-charly
         exit_status: 0
+        plugin: command
+        plugin_input:
+            command: test -x /usr/bin/charly
     composition-source-marker:
         check: command=test -d /etc
-        command: test -d /etc
         id: composition-source-marker
         exit_status: 0
+        plugin: command
+        plugin_input:
+            command: test -d /etc

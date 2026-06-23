@@ -18,11 +18,13 @@ immich-ml:
             - '@github.com/overthinkos/overthink/candy/dbus:v2026.170.1105'
     immich-ml-services-running:
         check: command=supervisorctl status postgresql redis immich-server immich-ml | awk '{print $2}' | sort -u
-        command: supervisorctl status postgresql redis immich-server immich-ml | awk '{print $2}' | sort -u
         id: immich-ml-services-running
-        in_container: true
         exit_status: 0
         stdout:
             - RUNNING
         context:
             - runtime
+        plugin: command
+        plugin_input:
+            command: supervisorctl status postgresql redis immich-server immich-ml | awk '{print $2}' | sort -u
+            in_container: true

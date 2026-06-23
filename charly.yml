@@ -17,7 +17,7 @@
 #  this charly.yml). From the parent repo: `charly -C box/fedora box build
 #  fedora-coder`, or anywhere: `charly --repo overthinkos/fedora box build
 #  fedora-coder`.
-version: 2026.174.0300
+version: 2026.174.0500
 # Canonical repo identity — lets the import-namespace loader recognize this repo
 # when main imports it under the `fedora` namespace to build the relocated boxes.
 # The dependency is one-directional: main imports fedora; fedora imports nothing
@@ -108,13 +108,15 @@ check-pod:
     status-shows-pod:
         check: command=charly status --json
         id: status-shows-pod
-        command: charly status --json
-        in_container: false
         stdout:
             - contains: '"kind": "pod"'
             - contains: check-pod
         context:
             - runtime
+        plugin: command
+        plugin_input:
+            command: charly status --json
+            in_container: false
 check-jupyter-pod:
     pod:
         image: jupyter
@@ -159,20 +161,22 @@ check-fedora-vm:
             echo LOCALPKG-RPM-AUTORESOLVE-OK
         id: localpkg-rpm-autoresolve
         description: charly installed as the opencharly rpm via localpkg, mandatory deps auto-resolved by dnf (incl. tailscale)
-        command: |
-            rpm -q opencharly >/dev/null 2>&1 &&
-            rpm -q podman >/dev/null 2>&1 &&
-            rpm -q libvirt >/dev/null 2>&1 &&
-            rpm -q tailscale >/dev/null 2>&1 &&
-            rpm -q gocryptfs >/dev/null 2>&1 &&
-            command -v charly >/dev/null 2>&1 &&
-            charly version &&
-            echo LOCALPKG-RPM-AUTORESOLVE-OK
         stdout:
             - contains: LOCALPKG-RPM-AUTORESOLVE-OK
         exit_status: 0
         context:
             - runtime
+        plugin: command
+        plugin_input:
+            command: |
+                rpm -q opencharly >/dev/null 2>&1 &&
+                rpm -q podman >/dev/null 2>&1 &&
+                rpm -q libvirt >/dev/null 2>&1 &&
+                rpm -q tailscale >/dev/null 2>&1 &&
+                rpm -q gocryptfs >/dev/null 2>&1 &&
+                command -v charly >/dev/null 2>&1 &&
+                charly version &&
+                echo LOCALPKG-RPM-AUTORESOLVE-OK
 # Cross-deployment probing (pod→pod): a Chrome DRIVER pod (sibling member)
 # CDP-probes a separate web-server SUBJECT pod (sibling member) over the shared
 # `charly` network. Proves venue-from-position + ${HOST:<subject>} end-to-end —
@@ -245,13 +249,15 @@ check-cross-vm-http:
         local-driver-reaches-vm:
             check: command=curl -fsS http://${HOST:web-vm:80}/
             id: local-driver-reaches-vm
-            command: "curl -fsS http://${HOST:web-vm:80}/"
             eventually: 90s
             retry_interval: 5s
             stdout:
                 - contains: charly-fixture-vm-content-marker
             context:
                 - runtime
+            plugin: command
+            plugin_input:
+                command: "curl -fsS http://${HOST:web-vm:80}/"
 # Cross-deployment across kinds (local→pod): a LOCAL (host) DRIVER member curls a
 # web-server SUBJECT pod member via its published port. Exercises a NON-pod member
 # bring-up (`charly bundle add` the local driver) + venue-from-position dispatch +
@@ -282,13 +288,15 @@ check-cross-local-http:
         local-driver-reaches-web:
             check: command=curl -fsS http://${HOST:web-local:8080}/
             id: local-driver-reaches-web
-            command: "curl -fsS http://${HOST:web-local:8080}/"
             eventually: 30s
             retry_interval: 3s
             stdout:
                 - contains: charly-fixture-web-content-marker
             context:
                 - runtime
+            plugin: command
+            plugin_input:
+                command: "curl -fsS http://${HOST:web-local:8080}/"
 # Disposable Fedora Cloud VM — the substrate for check-fedora-vm, which proves
 # the rpm localpkg AUTO-RESOLVE deploy path (build the opencharly .rpm in a
 # fedora container, dnf install onto the guest, mandatory deps auto-resolved).
