@@ -53,3 +53,15 @@ check-pod:
         plugin_input: {interface: "lo"}
         context:
             - runtime
+    check-unix-group-present:
+        # The CHECK half of the dual-natured unix_group state-provision plugin verb: the
+        # group was created at IMAGE BUILD by the composed check-stack-layer's act step
+        # (check-stack-layer-unix-group-act, the act-emit enabler), so it is baked into the
+        # check-pod image and present at runtime. Proves check+act compose over the shared
+        # plugin path — the act emits a groupadd at build, the check probes it live.
+        check: the checkgrp group provisioned at image build by the unix_group act step is present (the check half of the dual-natured state-provision plugin verb)
+        id: check-unix-group-present
+        plugin: unix_group
+        plugin_input: {unix_group: "checkgrp"}
+        context:
+            - runtime
