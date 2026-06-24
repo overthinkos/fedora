@@ -16,6 +16,26 @@ check-pod:
             # The OUT-OF-TREE plugin candy: its baked `externalprobe` check rides in,
             # and at check-live charly's loader host-builds + connects it out-of-proc.
             - '@github.com/overthinkos/overthink/candy/plugin-example-external:v2026.174.0425'
+            # BUILD-TIME plugin execution (operator-authorized). plugin-example-step
+            # provides verb:examplestep; examplestep-consumer's BUILD-context
+            # `plugin: examplestep` run-step drives the build-path plugin-connect +
+            # emitPluginFragment seam, so at image build the plugin's OpEmit bakes
+            # `RUN : > /opt/examplestep-baked` into the Containerfile. Mirrors the
+            # existing @github plugin-example-external + check-stack-layer
+            # build-time-act (unix_group groupadd) cross-repo pattern; the
+            # examplestep-build-baked check below proves it executed.
+            - '@github.com/overthinkos/overthink/candy/plugin-example-step:v2026.175.0645'
+            - '@github.com/overthinkos/overthink/candy/examplestep-consumer:v2026.175.0645'
+    examplestep-build-baked:
+        check: the examplestep plugin EXECUTED at image build — its OpEmit baked /opt/examplestep-baked into the check-pod image (proves the operator-authorized build-time plugin-execution seam, where the build-path plugin connect + emitPluginFragment ran the external plugin during image generation)
+        id: examplestep-build-baked
+        exit_status: 0
+        plugin: command
+        plugin_input:
+            command: "test -f /opt/examplestep-baked"
+            in_container: true
+        context:
+            - runtime
     exampleprobe-baked:
         check: the exampleprobe plugin verb dispatches through the provider registry and passes (proves the unified-provider + generic plugin-verb foundation, baked into the check-pod image)
         id: exampleprobe-baked
