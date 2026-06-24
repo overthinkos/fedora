@@ -26,6 +26,23 @@ check-pod:
             # examplestep-build-baked check below proves it executed.
             - '@github.com/overthinkos/overthink/candy/plugin-example-step:v2026.175.0645'
             - '@github.com/overthinkos/overthink/candy/examplestep-consumer:v2026.175.0645'
+            # BUILD-TIME BUILDER plugin execution. plugin-example-builder provides
+            # builder:examplebuilder; examplebuilder-consumer's `external_builder:
+            # examplebuilder` drives emitExternalBuilderStages, so at image build the
+            # builder's OpResolve emits a FROM…AS stage that COPYs /opt/examplebuilder-artifact
+            # into the image. The examplebuilder-build-baked check below proves it executed.
+            - '@github.com/overthinkos/overthink/candy/plugin-example-builder:v2026.175.0805'
+            - '@github.com/overthinkos/overthink/candy/examplebuilder-consumer:v2026.175.0805'
+    examplebuilder-build-baked:
+        check: the examplebuilder external builder plugin EXECUTED at image build — its OpResolve emitted a multi-stage builder that COPYd /opt/examplebuilder-artifact into the check-pod image (proves the build-time external-BUILDER seam emitExternalBuilderStages + Invoke(OpResolve))
+        id: examplebuilder-build-baked
+        exit_status: 0
+        plugin: command
+        plugin_input:
+            command: "test -f /opt/examplebuilder-artifact"
+            in_container: true
+        context:
+            - runtime
     examplestep-build-baked:
         check: the examplestep plugin EXECUTED at image build — its OpEmit baked /opt/examplestep-baked into the check-pod image (proves the operator-authorized build-time plugin-execution seam, where the build-path plugin connect + emitPluginFragment ran the external plugin during image generation)
         id: examplestep-build-baked
