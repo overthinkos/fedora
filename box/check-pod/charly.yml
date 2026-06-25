@@ -13,8 +13,11 @@ check-pod:
         candy:
             - '@github.com/overthinkos/overthink/candy/check-base-layer:v2026.174.0425'
             - '@github.com/overthinkos/overthink/candy/check-stack-layer:v2026.174.0425'
-            # The OUT-OF-TREE plugin candy: its baked `externalprobe` check rides in,
-            # and at check-live charly's loader host-builds + connects it out-of-proc.
+            # The DUAL-PLACEMENT plugin candy: its baked `externalprobe` check rides in,
+            # and the verb dispatches via the COMPILED-IN provider (the candy is listed
+            # in charly.yml compiled_plugins, so registerCompiledPlugin registered it
+            # in-process and the loader's coexist switch skips the out-of-process host
+            # build). The SAME candy serves out-of-process when NOT compiled in.
             - '@github.com/overthinkos/overthink/candy/plugin-example-external:v2026.174.0425'
             # BUILD-TIME plugin execution (operator-authorized). plugin-example-step
             # provides verb:examplestep; examplestep-consumer's BUILD-context
