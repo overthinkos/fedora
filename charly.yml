@@ -177,6 +177,13 @@ check-fedora-vm:
                 command -v charly >/dev/null 2>&1 &&
                 charly version &&
                 echo LOCALPKG-RPM-AUTORESOLVE-OK
+    libvirt-verb-dispatches:
+        check: the libvirt verb dispatches through the compiled-in candy/plugin-libvirt and lists the host libvirt domains backing this disposable VM deployment
+        id: libvirt-verb-dispatches
+        libvirt: list
+        exit_status: 0
+        context:
+            - runtime
 # Cross-deployment probing (pod→pod): a Chrome DRIVER pod (sibling member)
 # CDP-probes a separate web-server SUBJECT pod (sibling member) over the shared
 # `charly` network. Proves venue-from-position + ${HOST:<subject>} end-to-end —
