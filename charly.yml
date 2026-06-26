@@ -178,7 +178,7 @@ check-fedora-vm:
                 charly version &&
                 echo LOCALPKG-RPM-AUTORESOLVE-OK
     libvirt-verb-dispatches:
-        check: the libvirt verb dispatches through the compiled-in candy/plugin-libvirt and lists the host libvirt domains backing this disposable VM deployment
+        check: the libvirt verb dispatches through the out-of-process candy/plugin-vm and lists the host libvirt domains backing this disposable VM deployment
         id: libvirt-verb-dispatches
         libvirt: list
         exit_status: 0
