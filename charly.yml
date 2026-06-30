@@ -124,21 +124,28 @@ check-pod:
 # resolves to deploy (it resolves the running image via the deploy's `image:`
 # field — the BASE short-name). The bed RDD-settles whether the overlay (with the
 # add_candy layer) actually deploys: it overlays the @github pod-addcandy-marker
-# layer (a pure /etc/pod-addcandy-marker file-write, built from the LOCAL
-# superproject tree via the bed runner's auto CHARLY_REPO_OVERRIDE — the :vTAG is
-# ignored), then asserts that marker is present INSIDE the running container. PASS
-# iff the overlay deployed; FAIL iff the base check-pod image deployed instead
-# (the quirk). Reuses the already-built check-pod image so the bed stays light.
+# layer (a /etc/pod-addcandy-marker file-write AND a copy: of copied.dat to
+# /etc/pod-addcandy-copied, built from the LOCAL superproject tree via the bed
+# runner's auto CHARLY_REPO_OVERRIDE — the :vTAG is ignored), then asserts BOTH
+# markers are present INSIDE the running container. The write: leg proves the
+# overlay deployed (PASS iff the overlay deployed; FAIL iff the base check-pod
+# image deployed instead — the quirk); the copy: leg additionally proves the
+# REMOTE add_candy candy's source tree was STAGED into .build/_candy/<name>.<version>/
+# (a copy: emits `COPY --from=<candy>` against the per-candy `FROM scratch AS
+# <candy>` context stage, whose COPY source is that staged dir) — without the
+# staging the overlay BUILD itself fails at `COPY .build/_candy/…: no such file`,
+# the write:-only marker never referenced the scratch stage so never exercised it.
+# Reuses the already-built check-pod image so the bed stays light.
 check-addcandy-pod:
     pod:
         image: check-pod
         disposable: true
         lifecycle: dev
         description: >-
-            Sole proof of the add_candy-on-pod overlay-deploy path when deploy-key != image-name. A disposable pod bed whose deploy-key (check-addcandy-pod) differs from its image-name (check-pod) and which add_candy-overlays the pod-addcandy-marker layer (a pure /etc/pod-addcandy-marker file-write carrying the token POD-ADDCANDY-MARKER-OK). It asserts that marker file is present inside the RUNNING container — so the bed passes iff the `<deploy-key>-overlay` image (which carries the add_candy layer) is the image `charly config`/`charly start` actually deployed, and fails if the BASE check-pod image (without the marker) was deployed instead. Reuses the already-built check-pod image so the bed stays light.
+            Sole proof of the add_candy-on-pod overlay-deploy path when deploy-key != image-name. A disposable pod bed whose deploy-key (check-addcandy-pod) differs from its image-name (check-pod) and which add_candy-overlays the pod-addcandy-marker layer (a /etc/pod-addcandy-marker file-write carrying POD-ADDCANDY-MARKER-OK AND a copy: of copied.dat to /etc/pod-addcandy-copied carrying POD-ADDCANDY-COPIED-OK). It asserts both files are present inside the RUNNING container — the write: leg proves the `<deploy-key>-overlay` image (which carries the add_candy layer) is the image `charly config`/`charly start` actually deployed (fails if the BASE check-pod image, without the markers, was deployed instead), and the copy: leg additionally proves the REMOTE add_candy candy's source tree was staged into the overlay build (`.build/_candy/<name>.<version>/`) so the per-candy scratch-stage COPY resolved. Reuses the already-built check-pod image so the bed stays light.
     check-addcandy-pod-add_candy:
         add_candy:
-            - '@github.com/overthinkos/overthink/candy/pod-addcandy-marker:v2026.181.1200'
+            - '@github.com/overthinkos/overthink/candy/pod-addcandy-marker:v2026.181.1430'
     addcandy-marker-deployed:
         check: the pod-addcandy marker file is present inside the running container — proves the add_candy overlay actually deployed, not the base image
         id: addcandy-marker-deployed
@@ -150,6 +157,17 @@ check-addcandy-pod:
             exists: true
             contains:
                 - contains: "POD-ADDCANDY-MARKER-OK"
+    addcandy-copied-deployed:
+        check: the pod-addcandy COPIED data file is present inside the running container — proves the REMOTE add_candy candy's copy-verb source was staged into the overlay build (.build/_candy/name.version) so the per-candy scratch-stage COPY resolved, and the overlay deployed
+        id: addcandy-copied-deployed
+        context:
+            - runtime
+        plugin: file
+        plugin_input:
+            file: /etc/pod-addcandy-copied
+            exists: true
+            contains:
+                - contains: "POD-ADDCANDY-COPIED-OK"
 check-jupyter-pod:
     pod:
         image: jupyter
