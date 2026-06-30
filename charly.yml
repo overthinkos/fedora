@@ -117,6 +117,39 @@ check-pod:
         plugin_input:
             command: charly status --json
             in_container: false
+# add_candy-on-pod overlay-deploy witness. Deploy-KEY (check-addcandy-pod) differs
+# from image-NAME (check-pod) — the precise condition under which the pod overlay
+# (`<deploy-key>-overlay` + the `<deploy-key>:<calver>` alias, carrying the
+# add_candy marker layer) may diverge from what `charly config <deploy-key>`
+# resolves to deploy (it resolves the running image via the deploy's `image:`
+# field — the BASE short-name). The bed RDD-settles whether the overlay (with the
+# add_candy layer) actually deploys: it overlays the @github pod-addcandy-marker
+# layer (a pure /etc/pod-addcandy-marker file-write, built from the LOCAL
+# superproject tree via the bed runner's auto CHARLY_REPO_OVERRIDE — the :vTAG is
+# ignored), then asserts that marker is present INSIDE the running container. PASS
+# iff the overlay deployed; FAIL iff the base check-pod image deployed instead
+# (the quirk). Reuses the already-built check-pod image so the bed stays light.
+check-addcandy-pod:
+    pod:
+        image: check-pod
+        disposable: true
+        lifecycle: dev
+        description: >-
+            Sole proof of the add_candy-on-pod overlay-deploy path when deploy-key != image-name. A disposable pod bed whose deploy-key (check-addcandy-pod) differs from its image-name (check-pod) and which add_candy-overlays the pod-addcandy-marker layer (a pure /etc/pod-addcandy-marker file-write carrying the token POD-ADDCANDY-MARKER-OK). It asserts that marker file is present inside the RUNNING container — so the bed passes iff the `<deploy-key>-overlay` image (which carries the add_candy layer) is the image `charly config`/`charly start` actually deployed, and fails if the BASE check-pod image (without the marker) was deployed instead. Reuses the already-built check-pod image so the bed stays light.
+    check-addcandy-pod-add_candy:
+        add_candy:
+            - '@github.com/overthinkos/overthink/candy/pod-addcandy-marker:v2026.181.1200'
+    addcandy-marker-deployed:
+        check: the pod-addcandy marker file is present inside the running container — proves the add_candy overlay actually deployed, not the base image
+        id: addcandy-marker-deployed
+        context:
+            - runtime
+        plugin: file
+        plugin_input:
+            file: /etc/pod-addcandy-marker
+            exists: true
+            contains:
+                - contains: "POD-ADDCANDY-MARKER-OK"
 check-jupyter-pod:
     pod:
         image: jupyter
