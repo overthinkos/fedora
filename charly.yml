@@ -168,6 +168,51 @@ check-addcandy-pod:
             exists: true
             contains:
                 - contains: "POD-ADDCANDY-COPIED-OK"
+# check-enc-pod — encrypted-volume (gocryptfs) mount path end-to-end through the
+# EXTERNALIZED candy/plugin-enc (C16a). Reuses the check-pod image and adds a
+# deploy-only `type: encrypted` volume; the bed's `charly config` step runs charly's
+# in-core enc shim (encPlanFor host-prelift → verb:enc OpExecute), which drives
+# `gocryptfs -init` then `systemd-run --scope --user gocryptfs -allow_other` on the
+# host, after which the container binds the FUSE plain dir. This is the sole R10 that
+# exercises the extracted plugin-enc mount mechanics end-to-end. Passphrase is
+# supplied via the GOCRYPTFS_PASSWORD env hook (resolveEncPassphrase source 1) — the
+# operator exports it for the run, e.g.
+#   GOCRYPTFS_PASSWORD=charly-bed charly check run check-enc-pod
+# The bed host needs gocryptfs + fusermount3 + a user systemd session (the `charly`
+# candy's declared deps). Reuses the already-built check-pod image so the bed is light.
+check-enc-pod:
+    pod:
+        image: check-pod
+        disposable: true
+        lifecycle: dev
+        description: >-
+            Sole proof of the encrypted-volume (gocryptfs) mount path end-to-end through the externalized candy/plugin-enc (C16a). Reuses the check-pod image and adds a deploy-only type: encrypted volume (enc-data -> /home/user/.enc-data); the bed's `charly config` step runs charly's in-core enc shim (encPlanFor host-prelift -> verb:enc OpExecute), which drives `gocryptfs -init` then `systemd-run --scope --user gocryptfs -allow_other` on the host, after which the container binds the FUSE plain dir. Asserts host-side `charly config status check-enc-pod` reports the volume initialized AND mounted (encStatus, still core), and an in-container write to the mount point reads back (the FUSE-backed plain dir is bind-mounted + writable). Passphrase via the GOCRYPTFS_PASSWORD env hook (resolveEncPassphrase source 1) — export it for the run; the bed host needs gocryptfs + fusermount3 + a user systemd session.
+    check-enc-pod-volume:
+        volume:
+            - name: enc-data
+              type: encrypted
+              path: /home/user/.enc-data
+    enc-status-mounted:
+        check: host-side `charly config status` reports the encrypted volume initialized AND mounted — the plugin-enc mount succeeded
+        id: enc-status-mounted
+        context:
+            - runtime
+        plugin: command
+        plugin_input:
+            command: charly config status check-enc-pod
+            in_container: false
+        stdout:
+            - matches: "enc-data\\s+yes\\s+yes"
+    enc-plain-writable:
+        check: the FUSE-backed plain dir is bind-mounted into the container and writable — a written marker reads back
+        id: enc-plain-writable
+        context:
+            - runtime
+        plugin: command
+        plugin_input:
+            command: "echo ENC-BED-OK > /home/user/.enc-data/charly-bed-marker && cat /home/user/.enc-data/charly-bed-marker"
+        stdout:
+            - contains: "ENC-BED-OK"
 check-jupyter-pod:
     pod:
         image: jupyter
