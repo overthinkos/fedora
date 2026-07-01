@@ -251,6 +251,67 @@ check-enc-pod:
             command: "echo ENC-BED-OK > /home/user/.enc-data/charly-bed-marker && cat /home/user/.enc-data/charly-bed-marker"
         stdout:
             - contains: "ENC-BED-OK"
+# check-tunnel-pod — the RESOURCE-FREE R10 for the externalized tunnel EXECUTION leg
+# (candy/plugin-tunnel, verb:tunnel; C16b). plugin-tunnel is COMPILED INTO charly
+# (compiled_plugins), so — exactly like check-enc-pod exercises the compiled-in
+# plugin-enc via the host — this bed reuses the check-pod image (a minimal running pod)
+# and drives verb:tunnel's creds-free `plan` dry-run on the HOST charly during check-live:
+# given a wire TunnelConfig the plan method returns the EXACT tailscale/cloudflared argv
+# it WOULD run WITHOUT exec, so the bed proves registry dispatch + the TunnelConfig wire
+# round-trip + the moved command-building logic with ZERO tailscale/cloudflare credentials.
+# The pod carries NO live `tunnel:` (a real ExecStartPost=tailscale serve on a logged-out
+# host would fail steady-state). Reuses the already-built check-pod image so the bed is light.
+check-tunnel-pod:
+    pod:
+        image: check-pod
+        disposable: true
+        lifecycle: dev
+        description: >-
+            Sole resource-free R10 for the externalized tunnel execution leg (candy/plugin-tunnel, verb:tunnel; C16b). plugin-tunnel is compiled into charly, so this bed reuses the check-pod image (a minimal running pod) and drives verb:tunnel's creds-free `plan` dry-run on the host during check-live — given a wire TunnelConfig the plan method returns the exact tailscale/cloudflared argv it would run WITHOUT exec, proving registry dispatch + the TunnelConfig wire round-trip + the moved command-building logic with ZERO tailscale/cloudflare credentials. Asserts both a tailscale (serve + funnel) and a cloudflare (ingress + run) plan. The pod carries no live tunnel: (a real ExecStartPost=tailscale serve on a logged-out host would fail steady-state).
+    tunnel-plan-tailscale:
+        check: verb:tunnel plan builds the exact tailscale serve/funnel argv from a wire TunnelConfig — creds-free registry dispatch + config round-trip + moved argv logic
+        id: tunnel-plan-tailscale
+        context:
+            - runtime
+        plugin: tunnel
+        plugin_input:
+            method: plan
+            config:
+                provider: tailscale
+                box_name: check-tunnel-pod
+                ports:
+                    - port: 8888
+                      backend_port: 8888
+                      protocol: http
+                      public: false
+                    - port: 443
+                      backend_port: 443
+                      protocol: https+insecure
+                      public: true
+            expect:
+                - tailscale serve --bg --https=8888 http://127.0.0.1:8888
+                - tailscale funnel --bg --https=443 https+insecure://127.0.0.1:443
+    tunnel-plan-cloudflare:
+        check: verb:tunnel plan builds the cloudflare ingress rules + run command from a wire TunnelConfig — creds-free registry dispatch + config round-trip
+        id: tunnel-plan-cloudflare
+        context:
+            - runtime
+        plugin: tunnel
+        plugin_input:
+            method: plan
+            config:
+                provider: cloudflare
+                tunnel_name: charly-check-tunnel
+                hostname: tunnel.example.com
+                box_name: check-tunnel-pod
+                ports:
+                    - port: 8080
+                      backend_port: 8080
+                      protocol: https
+                      public: true
+            expect:
+                - "ingress tunnel.example.com -> https://localhost:8080"
+                - cloudflared tunnel run charly-check-tunnel
 check-jupyter-pod:
     pod:
         image: jupyter
