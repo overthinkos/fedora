@@ -168,6 +168,44 @@ check-addcandy-pod:
             exists: true
             contains:
                 - contains: "POD-ADDCANDY-COPIED-OK"
+# check-stepkind-emit-pod — R10 witness for the F-STEP-EMIT BUILD leg: the pod-overlay
+# OCITarget open external-step arm that BAKES a class:step plugin's build-context Containerfile
+# fragment. A disposable pod bed reusing the check-pod image that add_candy-overlays TWO
+# @github main-repo candies: plugin-example-stepkind (the out-of-tree class:step plugin
+# declaring StepContract{emits:true} + serving OpEmit) and stepkind-build-consumer (a candy
+# with a BUILD-context `run: plugin: examplestepkind` step). At the overlay build, charly
+# lowers the run-step to an external step ("external:examplestepkind"), OCITarget.emitExternalStep
+# consults the plugin's declared Emits=true, Invokes its OpEmit, and splices the returned
+# Containerfile RUN — baking /etc/examplestepkind-build-baked (carrying STEPKIND-BUILD-BAKED-OK)
+# into the overlay image. The bed asserts the file is present INSIDE the running container, so it
+# passes iff the OpEmit fragment baked through the OCITarget external-step arm (fails if the arm
+# skipped the step or the base check-pod image, without the marker, deployed instead). The
+# build-time STEP analogue of check-pod's build-context examplestep-build-baked (a VERB baked via
+# emitTasks at box build) and the pod-overlay analogue of check-addcandy-pod. The bed runner's
+# auto CHARLY_REPO_OVERRIDE builds the candies from the LOCAL superproject tree (the :vTAG is a
+# nominal fetch coordinate). Reuses the already-built check-pod image so the bed stays light.
+check-stepkind-emit-pod:
+    pod:
+        image: check-pod
+        disposable: true
+        lifecycle: dev
+        description: >-
+            Sole proof of the F-STEP-EMIT BUILD leg — the pod-overlay OCITarget open external-step arm that bakes a class:step plugin's build-context Containerfile fragment. A disposable pod bed reusing the check-pod image that add_candy-overlays plugin-example-stepkind (the out-of-tree class:step plugin declaring StepContract emits=true + serving OpEmit) and stepkind-build-consumer (a candy with a BUILD-context run: plugin: examplestepkind step). At the overlay build charly lowers the run-step to an external step (external:examplestepkind), OCITarget.emitExternalStep consults the plugin's declared Emits=true, Invokes its OpEmit, and splices the returned Containerfile RUN — baking /etc/examplestepkind-build-baked (carrying STEPKIND-BUILD-BAKED-OK) into the overlay image. Asserts the file is present inside the RUNNING container, so it passes iff the OpEmit fragment baked through the external-step arm and the overlay (not the base check-pod image) deployed.
+    check-stepkind-emit-pod-add_candy:
+        add_candy:
+            - '@github.com/overthinkos/overthink/candy/plugin-example-stepkind:v2026.182.0900'
+            - '@github.com/overthinkos/overthink/candy/stepkind-build-consumer:v2026.182.0900'
+    stepkind-emit-baked-deployed:
+        check: the external-step OpEmit fragment baked — /etc/examplestepkind-build-baked is present inside the running container carrying STEPKIND-BUILD-BAKED-OK, proving the OCITarget external-step build-emit arm spliced the plugin's OpEmit fragment into the overlay image
+        id: stepkind-emit-baked-deployed
+        context:
+            - runtime
+        plugin: file
+        plugin_input:
+            file: /etc/examplestepkind-build-baked
+            exists: true
+            contains:
+                - contains: "STEPKIND-BUILD-BAKED-OK"
 # check-enc-pod — encrypted-volume (gocryptfs) mount path end-to-end through the
 # EXTERNALIZED candy/plugin-enc (C16a). Reuses the check-pod image and adds a
 # deploy-only `type: encrypted` volume; the bed's `charly config` step runs charly's
