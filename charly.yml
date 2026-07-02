@@ -447,6 +447,64 @@ check-cross-pod-cdp:
                 - contains: charly-fixture-web-content-marker
             context:
                 - runtime
+# =============================================================================
+# check-preempt-arbiter-pod — the R10 witness for the EXTERNALIZED resource ARBITER
+# (cutover C9, candy/plugin-preempt verb:arbiter). THE BED ITSELF is the exclusive
+# CLAIMANT: it declares requires_exclusive:[test-lock] (a SYNTHETIC selector-less token
+# — NO resource: gpu selector), so the check-runner's DESIGNED bed-arbiter path
+# (check_bed_run.go acquires the bed's lease BEFORE bring-up, held through the whole run)
+# fires AcquireExclusive through the compiled-in verb:arbiter over the in-proc HostArbiter
+# reverse channel — calling the gather + resources host seams + persisting a lease, with
+# applyMode SKIPPING the selector-less token (ZERO GPU). This is the canonical way a bed
+# exercises the arbiter (NOT a group MEMBER's requires_exclusive: persistBedDeployOverrides
+# does not persist a member's arbiter fields to the per-host config, so a member's
+# `charly start` never acquires — the empty-ledger RCA; a member cannot be an arbiter
+# participant without a separate deploy-lifecycle-integration fix). arbiter-claim-recorded
+# asserts `charly preempt status` surfaces the lease (the externalized-dispatch +
+# reverse-channel + persistence proof); driver-switch-dryrun proves the externalized GPU
+# driver-switch dispatch (candy/plugin-gpu, C9 1B) hardware-free. LIVE preemption of a
+# RUNNING holder is NOT self-contained-bed-testable (the runner acquires the bed's lease as
+# its FIRST action, before any holder could run) — holdersToStop/stopHolders/restoreHolders
+# is proven by the seam-faked unit suite (candy/plugin-preempt/arbiter_test.go) + the real
+# operator GPU-passthrough scenario (the cachyos GPU beds).
+# =============================================================================
+check-preempt-arbiter-pod:
+    pod:
+        image: check-pod
+        disposable: true
+        lifecycle: dev
+        description: >-
+            Sole R10 witness of the externalized resource ARBITER (candy/plugin-preempt verb:arbiter, cutover C9). THIS bed is the exclusive CLAIMANT: it declares requires_exclusive:[test-lock] (a SYNTHETIC selector-less token, NO resource: gpu selector), so the check-runner's designed bed-arbiter path fires AcquireExclusive through the compiled-in verb:arbiter over the in-proc HostArbiter reverse channel BEFORE bring-up — calling the gather + resources host seams, persisting a transient lease held for the whole run, with applyMode SKIPPING the selector-less token (ZERO GPU). arbiter-claim-recorded asserts `charly preempt status` surfaces the lease (the externalized-dispatch + reverse-channel + persistence proof); driver-switch-dryrun proves the externalized GPU driver-switch dispatch (candy/plugin-gpu, C9 1B) hardware-free via `charly vm gpu plan`. LIVE preemption of a RUNNING holder is proven by the seam-faked unit suite (candy/plugin-preempt/arbiter_test.go), not here (the runner acquires the bed's lease before any holder could run).
+    check-preempt-arbiter-pod-requires_exclusive:
+        requires_exclusive:
+            - test-lock
+    arbiter-claim-recorded:
+        check: the externalized arbiter recorded THIS bed's test-lock lease — AcquireExclusive dispatched through the compiled-in verb:arbiter + the HostArbiter reverse channel, and the lease surfaces via `charly preempt status`
+        id: arbiter-claim-recorded
+        context:
+            - runtime
+        eventually: 30s
+        retry_interval: 3s
+        plugin: command
+        plugin_input:
+            command: "charly preempt status"
+            in_container: false
+        stdout:
+            - contains: check-preempt-arbiter-pod
+            - contains: test-lock
+    driver-switch-dryrun:
+        check: the externalized GPU driver-switch (candy/plugin-gpu, C9 1B) dispatches hardware-free — `charly vm gpu plan vfio` returns the exact vfio-pci rebind commands WITHOUT touching sysfs
+        id: driver-switch-dryrun
+        context:
+            - runtime
+        plugin: command
+        plugin_input:
+            command: "charly vm gpu plan vfio"
+            in_container: false
+        stdout:
+            - contains: vfio-pci
+            - contains: driver_override
+
 # Cross-deployment probing ACROSS KINDS (local→VM): a LOCAL (host) DRIVER member
 # curls a web-server SUBJECT running in a VM member. The driver reaches the guest's
 # nginx :80 via ${HOST:web-vm:80} → resolveCheckEndpoint's VM branch →
